@@ -1,0 +1,50 @@
+@import "./mixin";
+
+.mint-cell-wrapper {
+  padding: 0 .2rem;
+	background-image: linear-gradient(180deg, $color-border, $color-border 50%, transparent 50%);
+  font-size: .3rem;
+}
+
+.mint-cell-value.is-link {
+	margin-right: 18px;
+}
+
+.mint-cell-allow-right::after {
+	right: 14px;
+}
+
+.mint-cell:last-child {
+	background-image: linear-gradient(0deg, $color-border, $color-border 50%, transparent 50%);
+}
+
+.mint-input-tar {
+	input {
+		text-align: right;
+	}
+}
+
+.mint-search {
+  height: .9rem;
+  .mint-searchbar {
+    padding: .16rem .25rem;
+    background: $color-white;
+
+  }
+  .mint-searchbar-inner {
+  	padding: .08rem .3rem;
+  	background: $color-border;
+  	height: .6rem;
+  	border-radius: .6rem;
+  }
+  .mint-searchbar-core {
+  	background: $color-border;
+  }
+  .mintui-search {
+  	margin-right: .2rem;
+  	font-size: .24rem;
+  }
+  .mint-searchbar-cancel {
+  	color: $color-blue;
+  }
+}

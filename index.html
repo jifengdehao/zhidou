@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>知了TV</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,user-scalable=no"/>
+  <!-- 引入播放器 css 文件 -->
+  <link href="//imgcache.qq.com/open/qcloud/video/tcplayer/tcplayer.css" rel="stylesheet">
+  <!-- 如需在IE8、9浏览器中初始化播放器，浏览器需支持Flash并在页面中引入 -->
+  <!--[if lt IE 9]>
+  <script src="//imgcache.qq.com/open/qcloud/video/tcplayer/ie8/videojs-ie8.js"></script>
+  <![endif]-->
+  <!-- 如果需要在 Chrome Firefox 等现代浏览器中通过H5播放hls，需要引入 hls.js -->
+  <script src="//imgcache.qq.com/open/qcloud/video/tcplayer/lib/hls.min.0.8.8.js"></script>
+  <!-- 引入播放器 js 文件 -->
+  <script src="//imgcache.qq.com/open/qcloud/video/tcplayer/tcplayer.min.js"></script>
+  <script>
+    (function () {
+      var d = document.documentElement;
+
+      function setSize() {
+        var dpr = Math.min(Math.round(devicePixelRatio), 2);
+        d.classList.add("g-dpr-" + dpr);
+        d.style.fontSize = d.clientWidth / 750 * 100 + "px";
+      }
+
+      var ua = navigator.userAgent
+      if (/\b(Windows\sNT|Macintosh|Linux)\b/.test(ua) && !/mobile|android/i.test(ua)) {
+        d.classList.add("g-plat-pc");
+      }
+
+      window.addEventListener("resize", setSize, !1);
+      setSize();
+    })();
+  </script>
+</head>
+<body>
+<div id="app"></div>
+<!-- <script src="//res.wx.qq.com/open/js/jweixin-1.1.0.js" type="text/javascript"></script>-->
+<!-- <script src="//player.polyv.net/script/player.js"></script>-->
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+</body>
+</html>

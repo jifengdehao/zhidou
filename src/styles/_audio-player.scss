@@ -1,0 +1,115 @@
+@import "./mixin";
+
+.audio-player {
+  padding: .35rem .25rem .25rem;
+  background: $color-white;
+  color: $color-gray-dark;
+  border-bottom: .01rem solid $color-border;
+  font-size: .24rem;
+  .audio-hd {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0px auto;
+    padding: 10px 0;
+    .progress-bar-wrapper{
+      flex: 1;
+    }
+    .audio-start,.audio-end{
+      flex: 0 0 30px;
+      line-height: 30px;
+      width: 30px;
+      text-align: center;
+    }
+    /*
+    .audio-progress {
+      flex: 1;
+      position: relative;
+      margin: 0 .16rem;
+      height: .04rem;
+      background: #b3b3b3;
+      border-radius: .02rem;
+    }
+    .audio-progress-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 0.04rem;
+      width: 0.5rem;
+      background: $color-blue;
+      border-radius: .02rem 0 0 .02rem;
+    }
+    .audio-progress-btn {
+      position: absolute;
+      top: -0.07rem;
+      left: 0.5rem;
+      display: inline-block;
+      width: .18rem;
+      height: .18rem;
+      background: $color-blue;
+      border-radius: 50%;
+    }
+    */
+  }
+  .audio-bd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: .35rem;
+    .audio-items {
+      //flex: 1;
+      width: 1.5rem;
+      text-align: center;
+      &:before {
+        content: "";
+        display: block;
+        margin: 0 auto .06rem;
+        width: .4rem;
+        height: .4rem;
+        background: url(../../../../assets/icon-items.png) no-repeat center center;
+        background-size: contain;
+      }
+    }
+    .audio-control {
+      //flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 .4rem;
+      width: 2.8rem;
+    }
+    .btn-play {
+      display: inline-block;
+      width: .9rem;
+      height: .9rem;
+      background: url(../../../../assets/icon-play.png) no-repeat center center;
+      background-size: contain;
+    }
+    .btn-pause {
+      display: inline-block;
+      width: .9rem;
+      height: .9rem;
+      background-image: url(../../../../assets/icon-pause.png);
+      background-size: contain;
+    }
+    .btn-prev, .btn-next {
+      display: inline-block;
+      width: .37rem;
+      height: .37rem;
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+
+    }
+    .btn-prev {
+      background-image: url(../../../../assets/icon-prev.png);
+    }
+    .btn-next {
+      background-image: url(../../../../assets/icon-next.png);
+    }
+    .audio-title {
+      width: 1.5rem;
+      text-align: center;
+    }
+  }
+}

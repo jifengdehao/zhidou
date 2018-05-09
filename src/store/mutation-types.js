@@ -1,0 +1,7 @@
+export const SET_PLAYING = 'SET_PLAYING'
+
+export const SET_PLAYLIST = 'SET_PLAYLIST'
+
+export const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX'
+
+export const SET_ISOAUTH = 'SET_ISOAUTH'

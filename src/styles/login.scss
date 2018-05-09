@@ -1,0 +1,40 @@
+  @import "mixin";
+
+  .form-wp {
+    padding: .8rem 0;
+    height: 100%;
+  }
+
+  .check-code {
+    display: inline-block;
+    width: 2rem;
+    line-height: .76rem;
+    text-align: center;
+    font-size: .28rem;
+    color: $color-white;
+    background: $color-red;
+    border-radius: .38rem;
+    &.disabled {
+      background: $color-gray;
+    }
+  }
+
+  .form-link {
+    padding: .4rem .2rem;
+    text-align: right;
+  }
+  .form-link-between {
+    display: flex;
+    justify-content: space-between;
+  }
+  .form-link a {
+    color: $color-blue;
+  }
+
+  .btn-submit {
+    display: block;
+    margin: 2.4rem auto 0;
+    width: 7rem;
+    border-radius: .4rem;
+    background: linear-gradient(left, $color-blue-begin, $color-blue-end) no-repeat;
+  }

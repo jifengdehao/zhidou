@@ -1,0 +1,116 @@
+@import "./mixin";
+
+.chat-wp {
+	padding: .3rem .2rem;
+	background: $color-white;
+}
+
+.chat-item {
+	margin-bottom: .4rem;
+	font-size: .24rem;
+	.chat-hd {
+		display: flex;
+	}
+	.chat-avatar {
+		width: .6rem;
+		height: .6rem;
+		border-radius: 50%;
+	}
+	.chat-info {
+		flex: 1;
+		.chat-nick {
+			color: $color-gray-dark;
+		}
+		.chat-teacher {
+			display: inline-block;
+			margin-left: .1rem;
+			padding: 0 .12rem;
+			background: $color-red;
+			color: $color-white;
+			border-radius: .03rem;
+		}
+		.chat-date {
+			color: $color-gray;
+		}
+	}
+	.chat-bd {
+		display: flex;
+		margin-top: .15rem;
+		.chat-content {
+			padding: .15rem .24rem;
+			border-radius: .05rem;
+			background: #e9ecee;
+			font-size: .28rem;
+      &>img{
+        max-width: 100%;
+        height: auto;
+      }
+		}
+	}
+}
+
+.chat-you {
+	//margin-right: .9rem;
+	.chat-avatar {
+		margin-right: .2rem;
+	}
+	.chat-bd {
+		.chat-content {
+			margin: 0 0.9rem 0 .8rem;
+		}
+
+	}
+}
+.chat-me {
+	//margin-left: .9rem;
+	.chat-avatar {
+		margin-left: .2rem;
+	}
+	.chat-info {
+		text-align: right;
+	}
+	.chat-bd {
+		justify-content: flex-end;
+		.chat-content {
+			margin: 0 0.8rem 0 .9rem;
+			background: $color-blue;
+			color: $color-white;
+		}
+	}
+}
+
+.chat-prize {
+	.red {
+		color: #e54839;
+	}
+	.prize-bd {
+		display: flex;
+		justify-content: center;
+		.prize-money, .prize-token {
+			padding: .14rem;
+			background: #ffcc66;
+			color: $color-white;
+			border-radius: .04rem;
+			&:before {
+				content: "";
+				float: left;
+				margin-right: .12rem;
+				width: .32rem;
+				height: .32rem;
+				background-repeat: no-repeat;
+				background-position: center center;
+				background-size: contain;
+			}
+		}
+		.prize-money {
+			&:before {
+				background-image: url(../../../../assets/icon-hongbao.png);
+			}
+		}
+		.prize-token {
+			&:before {
+				background-image: url(../../../../assets/icon-token-red.png);
+			}
+		}
+	}
+}
