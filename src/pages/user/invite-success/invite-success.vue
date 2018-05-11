@@ -12,7 +12,7 @@
     <div class="content">
       <h2>关注公众号<span class="blue">查看资产</span></h2>
       <img src="./icon-qrcode.jpg" width="160"/>
-      <p class="mt20">长安二维码&nbsp;关注公众号</p>
+      <p class="mt20">长按二维码&nbsp;关注公众号</p>
       <p>或</p>
       <p>公众号：知了TV</p>
       <button type="button" class="btn mt30"

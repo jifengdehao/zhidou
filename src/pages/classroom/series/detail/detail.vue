@@ -6,11 +6,11 @@
 <template>
   <div class="scroll-wp">
     <div class="scroll-bd">
-      <div class="swipe-wp">
+      <div class="swipe-wp" style="height: 4.7rem;">
         <slider v-if="banner.length > 0">
           <div v-for="(item, key) in banner" :key="key">
             <a href="javascript:;">
-              <img :src="item.url || $root.placeHolder.banner" style="height: 3rem"/>
+              <img :src="item.url || $root.placeHolder.banner" style="height: 4.7rem;"/>
             </a>
           </div>
         </slider>
@@ -21,7 +21,15 @@
           <p>已开课{{ course.period_count }}节 | 预计更新{{ course.plan_period_count }}节课</p>
         </div>
       </div>
-
+      <!--报名人数-->
+      <div class="detail-student">
+        <p class="hd fs12 gray">报名人数<span class="ml20">{{students.total}}人</span></p>
+        <div class="bd">
+          <img class="avatar" :src="item.img || $root.placeHolder.avatar" v-for="(item,index) in students.user"
+               :key="index" width="20" height="20">
+        </div>
+        <div class="ft ml10"><i></i></div>
+      </div>
       <mt-cell class="cell-card mt20" :title="course.name" is-link to="/classroom">
         <img slot="icon" class="avatar" v-lazy="course.avatar || $root.placeHolder.avatar">
       </mt-cell>
@@ -80,7 +88,8 @@
         intro: [],
         banner: [],
         periodList: [],
-        page: 1
+        page: 1,
+        students: {}
       };
     },
     created() {
@@ -108,6 +117,8 @@
           if (res) {
             console.log(res)
             this.course = res;
+            this.students.total = res.sign_total
+            this.students.user = res.sign_user
             if (res.img.length > 0) {
               this.banner = res.img
             }
@@ -119,7 +130,7 @@
       },
       // 获取课时
       getPeriodList(id, page) {
-        this.API.coursePeriodList(id, page).then((res) => {
+        this.API.userCoursePeriodList(id, page).then((res) => {
           if (res._items.length > 0) {
             this.periodList = this.periodList.concat(res._items)
             if (res._meta.pageCount > page) {
@@ -147,7 +158,38 @@
   .detail-info, .detail-intro {
     background: $color-white;
   }
-
+  .detail-student {
+    display: flex;
+    align-items: center;
+    padding: .15rem .2rem;
+    background-color: #ffffff;
+    border-bottom: .01rem solid $color-border;
+    .hd {
+      flex: 1;
+    }
+    .bd {
+      .avatar {
+        float: left;
+        margin-right: .04rem;
+      }
+    }
+    .ft {
+      display: flex;
+      align-items: center;
+      i, &:before, &:after {
+        display: block;
+        margin-right: .07rem;
+        width: .1rem;
+        height: .1rem;
+        overflow: hidden;
+        border-radius: 50%;
+        background: #7f7f7f;
+      }
+      &:before, &:after {
+        content: "";
+      }
+    }
+  }
   .detail-info {
     padding: .2rem;
     border-bottom: .01rem solid $color-border;

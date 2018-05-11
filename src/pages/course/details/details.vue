@@ -8,14 +8,24 @@
   <div class="scroll-wp">
     <div class="scroll-bd">
       <!--轮播图-->
-      <div class="swipe-wp">
+      <div class="swipe-wp" style="height: 4.7rem;">
         <slider v-if="swiper.length>0">
           <div v-for="(item,index) in swiper" :key="index">
             <a href="javascript:;">
-              <img :src="item || $root.placeHolder.banner" style="height: 3rem"/>
+              <img :src="item || $root.placeHolder.banner" style="height: 4.7rem;"/>
             </a>
           </div>
         </slider>
+        <div class="sale-share" v-if="course.is_share == 1" @click="share">
+          <i class="icon-share"></i>
+          <div>
+            <div class="icon-content" v-if="course.pay_type == 1">赚{{course.gain_price}}元</div>
+            <div class="icon-content" v-if="course.pay_type == 2">赚{{course.gain_price}}个豆</div>
+          </div>
+        </div>
+        <div class="sale-share" v-else @click="share">
+          <i class="icon-share"></i>
+        </div>
       </div>
       <!--课程详情-->
       <div class="detail-info">
@@ -26,14 +36,14 @@
         </div>
       </div>
       <!--报名人数-->
-      <div class="detail-student">
+      <!--<div class="detail-student">
         <p class="hd fs12 gray">报名人数<span class="ml20">{{students.total}}人</span></p>
         <div class="bd">
           <img class="avatar" :src="item.img || $root.placeHolder.avatar" v-for="(item,index) in students.user"
                :key="index" width="100%">
         </div>
         <div class="ft ml10"><i></i></div>
-      </div>
+      </div>-->
       <!--作者-->
       <mt-cell class="cell-card mt20" :title="teacher.space_name" :to="'/course/author/' +teacher.id">
         <img slot="icon" class="avatar" :src="teacher.avatar || $root.placeHolder.avatar">
@@ -141,14 +151,14 @@
       </div>
     </div>
 
-    <div class="share" @click="share">分享课程</div>
-    <div class="share-wrapper" v-show="isShare">
-      <div class="mask"></div>
-      <div class="share-icon" @click="isShare=false">
-        <img src="../../../assets/icon-share.png"/>
-        <p>点击右上角分享</p>
-      </div>
-    </div>
+    <!-- <div class="share" @click="share">分享课程</div>
+     <div class="share-wrapper" v-show="isShare">
+       <div class="mask"></div>
+       <div class="share-icon" @click="isShare=false">
+         <img src="../../../assets/icon-share.png" width="104" height="98"/>
+         <p>点击右上角分享</p>
+       </div>
+     </div>-->
   </div>
 </template>
 <script>
@@ -180,11 +190,13 @@
         orderVisible: false,
         userBean: {}, // 用户智豆
         loading: false,
-        isShare: false
+        isShare: false,
+        userInfo: {} // 个人信息
       }
     },
     created() {
       this.getClassDetails(this.id)
+     /* this.getUserInfo()*/
     },
     computed: {
       isPay() {
@@ -200,6 +212,7 @@
       } else {
         next()
       }
+
       function isIOSWeChat() {
         let ua = window.navigator.userAgent.toLowerCase();
         if (ua.match(/(iPhone|iPod|iPad);?/i)) {
@@ -210,6 +223,14 @@
       }
     },
     methods: {
+      getUserInfo() {
+        this.API.userBaseInfo().then((res) => {
+          if (res) {
+            console.log(res)
+            this.userInfo = res;
+          }
+        })
+      },
       initShare() {
         if (this.isWeixin()) {
           const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
@@ -399,9 +420,10 @@
       // 课程详情
       getClassDetails(id) {
         this.API.courseShowCourse(id).then((res) => {
+          console.log(res)
           this.swiper = res.course.img
           this.course = res.course
-          this.students = res.students
+          // this.students = res.students
           this.teacher = res.teacher
           this.user = res.user
           this.intro = res.course.note
@@ -458,6 +480,31 @@
 </script>
 <style scoped lang="scss">
   @import "../../../styles/mixin.scss";
+
+  .sale-share {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 50;
+    .icon-share {
+      display: block;
+      width: .44rem;
+      height: .37rem;
+      background: url("./icon-share-01.png") no-repeat center;
+      background-size: contain;
+      margin: .2rem .2rem .2rem auto;
+    }
+    .icon-content {
+      background: #f47a6d url("./icon-share-02.png") no-repeat 8% center;
+      background-size: 11px 11px;
+      color: #ffffff;
+      font-size: .24rem;
+      padding-right: .1rem;
+      padding-left: .4rem;
+      border-bottom-left-radius: 10px;
+      border-top-left-radius: 10px;
+    }
+  }
 
   .slide-wrapper {
     position: relative;

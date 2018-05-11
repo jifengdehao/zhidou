@@ -111,13 +111,15 @@
           if (this.isWeixin()) {
             const url = 'http://www.zhiliaotv.com/invite'
             const registerUrl = 'http://www.zhiliaotv.com/register/?invite_code=' + vm.user.invite_code // 注册的url
-            const imgUrl = 'http://www.zhiliaotv.com/static/img/bg.d53e992.png'
+            const imgUrl = 'http://www.zhiliaotv.com/static/img/invite.jpg'
             this.API.wechatJSSDK(url).then((res) => {
               let content = {
                 title: '知了TV',
                 desc: '邀请好友一起瓜分1亿个智豆~',
                 link: registerUrl,
-                imgUrl: imgUrl
+                imgUrl: imgUrl,
+                width: '300',
+                height: '300'
               }
               weixinShare(res, content, function (res) {
                 vm.$toast('分享成功')

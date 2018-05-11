@@ -56,6 +56,7 @@ const handleError = (res) => {
     message = '传输数据错误';
   } else if (status === 401) {
     message = '请先登录';
+    console.log(location)
     return router.push('/oauth');
   } else if (status === 404) {
     message = '请求接口不存在';
@@ -183,9 +184,6 @@ export default {
   // 单课学习
   courseStudySingle: id => http.post('/user/course/study-single', {id}),
 
-  // 数据采集
-  getVideoData: data => http.get('http://uba.dev.zhidou.com/p', data),
-
   // 系列课学习
   courseStudySet: data => http.post('/user/course/study-set', data),
 
@@ -243,6 +241,9 @@ export default {
   // 直播间 - 系列课详情 - 课时列表
 
   coursePeriodList: (id, page) => http.post(`/course/period-list?page=${page}`, {id}),
+
+  // 个人直播间 系列课详情 - 课时列表
+  userCoursePeriodList: (id, page) => http.post(`/user/course/period-list?page=${page}`, {id}),
 
   // 直播间 - 观看自己创建的课程列表（包含单次课程，系列课程）
   anchorSeries: (course_type, page) => http.post(`/user/anchor/course-list?page=${page}`, {course_type}),
@@ -314,6 +315,12 @@ export default {
   otherClass: data => http.post(`/user/course/other-course?page=${data.page}`, data),
 
   // 邀请用户列表
-  inviteList: data => http.post(`/user/invite/user-list?page=${data.page}`, data)
+  inviteList: data => http.post(`/user/invite/user-list?page=${data.page}`, data),
+
+  // 课程分销列表
+  getDistribution: data => http.post(`/course/distribution-list?page=${data.page}`, data),
+
+  // 智豆转账
+  getSendBeanCode: () => http.post('/user/verify/bean-transfer-verify-mobile')
 
 };

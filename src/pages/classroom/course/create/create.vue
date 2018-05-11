@@ -90,34 +90,61 @@
       </div>
       <div class="select-bd">
         <ul class="tab-hd">
-          <li class="icon-free" :class="{active: params.pay_type == 0}" @click="params.pay_type = 0"><i></i>公开</li>
-          <li class="icon-private" :class="{active: params.pay_type == 3}"
-              @click="params.pay_type = 3"><i></i>加密
+          <li class="icon-free" :class="{active: tab== 0}" @click="selectType(0)"><i></i>公开</li>
+          <li class="icon-private" :class="{active: tab == 3}"
+              @click="selectType(3)"><i></i>加密
           </li>
-          <li class="icon-cash" :class="{active: params.pay_type == 1}"
-              @click="params.pay_type = 1"><i></i>现金收费
-          </li>
-          <li class="icon-charge" :class="{active: params.pay_type == 2}"
-              @click="params.pay_type = 2"><i></i>智豆收费
-          </li>
+          <li class="icon-cash" :class="{active: tab == 4}" @click="selectType(4)"><i></i>收费</li>
+          <!-- <li class="icon-cash" :class="{active: params.pay_type == 1}"
+               @click="params.pay_type = 1"><i></i>现金收费
+           </li>
+           <li class="icon-charge" :class="{active: params.pay_type == 2}"
+               @click="params.pay_type = 2"><i></i>智豆收费
+           </li>-->
         </ul>
         <ul class="tab-bd">
-          <li v-if="params.pay_type == 0">
+          <li v-if="tab == 0">
             <p>任何人都可以收听直播</p>
           </li>
-          <li v-if="params.pay_type == 3">
+          <li v-if="tab == 3">
             <label>设置一个固定密码</label>
             <input v-model.trim="params.pwd" type="text" placeholder="支持英文和数字，不区分大小写">
           </li>
-          <li v-if="params.pay_type == 1">
+          <li v-if="tab == 4">
+            <div style="justify-content: space-between;display: flex;margin-bottom: .2rem">设置一个固定金额
+              <select v-model="params.pay_type">
+                <option value="1">现金收费</option>
+                <option value="2">智豆收费</option>
+              </select></div>
+            <input v-model.trim="params.price" type="number" placeholder="最小金额1元" v-if="params.pay_type ==  1">
+            <input v-model.trim="params.price" type="number" placeholder="最少1个智豆" v-if="params.pay_type ==  2">
+          </li>
+          <li v-if="tab == 4" class="mt20">
+            <div style="justify-content: space-between;display: flex;margin-bottom: .2rem;align-items: center;">设置邀请奖励
+              <mt-switch v-model="isInvite" style="padding: 0;"></mt-switch>
+            </div>
+            <div style="justify-content: space-between;display: flex;align-items: center;margin-bottom: .2rem">
+              分成比例（%）<input v-model.trim="params.share_gain_rate" type="number"
+                            placeholder="请输入分成比例，比例必须是整数"
+                            onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                            onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"
+                            style="flex: 1;">
+            </div>
+            <div style="justify-content: space-between;display: flex;align-items: center;" v-if="params.pay_type == 1">
+              分成（¥）&nbsp;{{sharePrice}}
+            </div>
+            <div style="justify-content: space-between;display: flex;align-items: center;" v-if="params.pay_type == 2">
+              分成（个豆）&nbsp;{{sharePrice}}
+            </div>
+          </li>
+          <!--<li v-if="params.pay_type == 1">
             <label>设置一个固定金额</label>
             <input v-model.trim="params.price" type="number" placeholder="最小金额1元">
           </li>
           <li v-if="params.pay_type == 2">
             <label>设置一个固定智豆个数</label>
             <input v-model.trim="params.price" type="number" placeholder="最少1个智豆">
-          </li>
-
+          </li>-->
         </ul>
       </div>
     </div>
@@ -137,7 +164,9 @@
   export default {
     data() {
       return {
-        step: 1,
+        isInvite: false, // 是否设置邀请分享
+        tab: 0,
+        step: 2,
         audioFiles: [], // 音频文件
         videoFile: {}, //　视频文件
         categoryName: '', // 分类名称
@@ -146,14 +175,15 @@
           name: '', // 课程主题
           category_id: 0, // 分类Id
           file_id: '', // 文件Id
-          ext: 'mp3',
           pay_type: 0,
           pwd: '',// 加密
           price: '', // 价格
           images: '',
           intro: '',
           period_type: 1, // 上传类型
-          file_name: '' // 上传文件名
+          file_name: '',// 上传文件名
+          share_gain_rate: '', // 分享提成比例
+          is_share_gain: 0 // 0不是 1 是
         },
         sheetVisible: false,
         actions: [],
@@ -170,7 +200,24 @@
       this.getCourseClassify();
       // this.getSignature()
     },
+    computed: {
+      sharePrice() {
+        if (this.isInvite && this.params.pay_type == 1 && this.params.share_gain_rate <= 100) {
+          return (this.params.share_gain_rate / 100 * this.params.price).toFixed(1)
+        } else if (this.isInvite && this.params.pay_type == 2 && this.params.share_gain_rate <= 100) {
+          return Math.floor(this.params.share_gain_rate / 100 * this.params.price)
+        }
+      }
+    },
     methods: {
+      selectType(num) {
+        this.tab = num
+        if (num == 4) {
+          this.params.pay_type = 1
+        } else {
+          this.params.pay_type = num
+        }
+      },
       loadScript(callback) {
         if (!window.qcVideo) {
           const jQScript = document.createElement('script');
@@ -300,16 +347,32 @@
           let vm = this;
           let message = '';
           let params = this.params;
+          console.log(this.isInvite)
           if (params.pay_type == 3 && !(/^[0-9a-zA-Z]+$/).test(params.pwd)) {
             message = '密码输入不正确';
           } else if (params.pay_type == 1 && params.price < 1) {
             message = '收费金额不能小于1';
+          } else if (params.pay_type == 1 && params.price > 1000000) {
+            message = '收费金额不能大于1000000';
           } else if (params.pay_type == 2 && params.price < 1) {
             message = '智豆数量不能少于1';
+          } else if (params.pay_type == 2 && params.price > 1000000) {
+            message = '智豆数量不能大于1000000';
+          } else if (this.isInvite && !params.share_gain_rate) {
+            message = '分享提成比例不能为空';
+          } else if (this.isInvite && params.share_gain_rate < 0) {
+            message = '分享提成比例大于0或小于100'
+          } else if (this.isInvite && params.share_gain_rate > 100) {
+            message = '分享提成比例大于0小于100'
           }
           if (message) {
             this.$toast(message);
             return;
+          }
+          if (this.isInvite) {
+            params.is_share_gain = 1
+          } else {
+            params.is_share_gain = 0
           }
           params.price = Math.floor(this.params.price * 10) / 10
           console.log(params)
@@ -475,7 +538,7 @@
   }
 
   .select-bd {
-    margin: 0 .6rem;
+    margin: 0 .4rem;
   }
 
   .tab-hd {

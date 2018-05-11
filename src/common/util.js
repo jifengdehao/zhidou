@@ -4,7 +4,7 @@
  * @param {Number} mobile 手机号码
  */
 export function isMobile(mobile) {
-  return /^1[345789]\d{9}$/.test(mobile);
+  return /^1[3456789]\d{9}$/.test(mobile);
 }
 
 /**

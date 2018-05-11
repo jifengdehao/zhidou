@@ -500,7 +500,7 @@
       },
       // 课时目录列表（系列课程）
       getPeriodList(courseId, page) {
-        this.API.coursePeriodList(courseId, page).then((res) => {
+        this.API.userCoursePeriodList(courseId, page).then((res) => {
           if (res && res._items.length > 0) {
             this.periodList = this.periodList.concat(res._items)
             if (res._meta.pageCount > page) {

@@ -347,7 +347,17 @@ export default new Router({
       path: '/invite/success',
       name: 'invite-success',
       component: () => import('@/pages/user/invite-success/invite-success')
-    }
+    },
+    {
+      path: '/index/earn-bean',
+      name: 'earn-bean',
+      component: () => import('@/pages/site/earn-bean/earn-bean')
+    },
+    {
+      path: '/index/course-distribution',
+      name: 'course-distribution',
+      component: () => import('@/pages/site/course-distribution/course-distribution')
+    },
   ]
 })
 ;

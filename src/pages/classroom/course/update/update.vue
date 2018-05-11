@@ -7,12 +7,12 @@
   <div class="scroll-wp">
     <div class="scroll-bd">
 
-      <div class="swipe-wp">
+      <div class="swipe-wp" style="height: 4.7rem">
         <a href="javascript:void(0);" class="btn-edit" @click="$router.push('/classroom/course/banner/' + id)">编辑</a>
-        <slider v-if="course.img.length>0">
-          <div v-for="(item, key) in course.img" :key="key">
+        <slider v-if="banner.length>0">
+          <div v-for="(item, key) in banner" :key="key">
             <a href="javascript:;">
-              <img :src="item.url || $root.placeHolder.banner" style="height: 3rem"/>
+              <img :src="item.url || $root.placeHolder.banner" style="height: 4.7rem"/>
             </a>
           </div>
         </slider>
@@ -44,6 +44,36 @@
         <template v-else-if="course.pay_type == 0">
           <mt-cell title="收费类型" value="免费"></mt-cell>
         </template>
+
+        <template v-if="course.pay_type == 1 || course.pay_type == 2">
+          <mt-cell title="设置邀请奖励">
+            <mt-switch v-model="isInvite" style="padding: 0;" slot></mt-switch>
+          </mt-cell>
+        </template>
+        <template v-if="isInvite">
+          <!--<mt-field v-model.trim="course.share_rate " label="分成比例（%）"
+                    placeholder="请输入分成比例，比例必须是整数" type="number"></mt-field>-->
+          <a  class="mint-cell mint-field form-bd">
+            <div class="mint-cell-wrapper">
+              <div class="mint-cell-title">
+                <span class="mint-cell-text">分成比例（%）</span>
+              </div>
+              <div class="mint-cell-value">
+                <input placeholder="请输入分成比例，比例必须是整数" number="true"
+                       type="number" class="mint-field-core"
+                       v-model.trim="course.share_rate"
+                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                       onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"
+                />
+              </div>
+            </div>
+          </a>
+        </template>
+        <template v-if="isInvite">
+          <mt-cell title="分成（¥）" :value="sharePrice" v-if="course.pay_type === 1"></mt-cell>
+          <mt-cell title="分成（个豆）" :value="sharePrice" v-if="course.pay_type === 2"></mt-cell>
+        </template>
+
         <div class="form-wp" v-if="course.file_type==2">
           <h3 class="form-hd">视频文件</h3>
           <div class="form-bd form-file">
@@ -102,7 +132,7 @@
     <div class="scroll-ft">
       <mt-button type="primary" @click="handleSubmit">确定</mt-button>
     </div>
-    <router-link tag="div" class="link-home" to="/"></router-link>
+    <router-link tag="div" class="link-home" to="/" style="bottom:10%;"></router-link>
   </div>
 </template>
 
@@ -115,7 +145,9 @@
   export default {
     data() {
       return {
+        isInvite: false,
         id: this.$route.params.id,
+        banner: [],
         course: {},// 课程详情
         files: [],// 上传音频文件
         audioUpload: {}, // 上传音频所需的参数
@@ -130,12 +162,29 @@
       FileUpload,
       Slider
     },
+    computed: {
+      sharePrice() {
+        if (this.isInvite && this.course.pay_type == 1 && this.course.share_rate <= 100) {
+          return (this.course.share_rate / 100 * this.course.price).toFixed(1)
+        } else if (this.isInvite && this.course.pay_type == 2 && this.course.share_rate <= 100) {
+          return Math.floor(this.course.share_rate / 100 * this.course.price)
+        }
+      }
+    },
     created() {
       // 获取课程详情
       this.API.anchorSingle(this.id).then((res) => {
         if (res) {
           console.log(res)
           this.course = res;
+          if (res.is_share == 1) {
+            this.isInvite = true
+          } else {
+            this.isInvite = false
+          }
+          if (res.img.length > 0) {
+            this.banner = res.img
+          }
           if (res.file_type == 1) {
             this.getUploadAudioKey()
           }
@@ -237,7 +286,8 @@
           price: Math.floor(this.course.price * 10) / 10,
           pwd: this.course.pwd,
           id: this.id,
-          pay_type: this.course.pay_type
+          pay_type: this.course.pay_type,
+          share_gain_rate: this.course.share_rate
         }
         if (params.name.length < 2 || params.name.length > 40) {
           message = '课程主题应为2-40个字';
@@ -247,13 +297,29 @@
           message = '密码输入不正确'
         } else if (params.pay_type === 1 && params.price < 1) {
           message = '收费金额不能小于1';
+        }else if (params.pay_type == 1 && params.price > 1000000) {
+          message = '收费金额不能大于1000000';
         } else if (params.pay_type === 2 && params.price < 1) {
           message = '智豆数量不能少于1';
+        }  else if (params.pay_type == 2 && params.price > 1000000) {
+          message = '智豆数量不能大于1000000';
+        }else if (this.isInvite && !params.share_gain_rate) {
+          message = '分享提成比例不能为空';
+        } else if (this.isInvite && params.share_gain_rate < 0) {
+          message = '分享提成比例大于0或小于100'
+        } else if (this.isInvite && params.share_gain_rate > 100) {
+          message = '分享提成比例大于0小于100'
         }
         if (message) {
           this.$toast(message);
           return;
         }
+        if (this.isInvite) {
+          params.is_share_gain = 1
+        } else {
+          params.is_share_gain = 0
+        }
+
         if (this.course.file_type == 1 && file) {
           params.file_id = file.response.fileId; // 音频id
           params.file_name = file.name

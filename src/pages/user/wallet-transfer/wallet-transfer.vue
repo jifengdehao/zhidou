@@ -55,29 +55,6 @@
     <div class="text">提现手续费¥&nbsp;{{shouxufei}}</div>
     <mt-button type="primary" size="large" class="mt30 btn-submit" @click="tiXian">确定</mt-button>
     <div class="text mt30">现金提现，需1-3个工作日到账。</div>
-    <!--
-    <div class="total mt20">
-      <div class="hd">
-        <span>当前可提现金额</span>
-      </div>
-      <div class="bd">
-        <p>
-          <strong>{{parseInt(cash.amount)}}</strong>元
-        </p>
-      </div>
-    </div>
-    <div class="mt20 mint-input-tar">
-      <mt-field label="提现金额" placeholder="请输入" v-model.trim="amount"></mt-field>
-      <mt-field label="收款方姓名" placeholder="请输入姓名" v-model.trim="name"></mt-field>
-    </div>
-    <div class="text">
-      <p>注意：请输入微信绑定的银行卡持卡人姓名</p>
-      <p class="mt20">1、每笔提现金额至少1元，每日提现上线为2万</p>
-      <p>2、为保证您的资金安全，提现需要申请实名认证</p>
-      <p>3、提现到账后，将直接转入微信钱包</p>
-      <p>4、每笔收入，微信已收取0.6%的手续费</p>
-    </div>
-    -->
     <router-link tag="div" class="link-home" to="/"></router-link>
   </div>
 </template>

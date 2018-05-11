@@ -8,11 +8,11 @@
     <div class="scroll-bd" ref="scrollBody">
       <div v-if="course.file_type == 1">
         <!--轮播图-->
-        <div class="swipe-wp">
+        <div class="swipe-wp" style="height: 4.7rem;">
           <slider v-if="swiper.length>0">
             <div v-for="(item,index) in swiper" :key="index">
               <a href="javascript:;">
-                <img :src="item || $root.placeHolder.banner" style="height: 3rem"/>
+                <img :src="item || $root.placeHolder.banner" style="height: 4.7rem;"/>
               </a>
             </div>
           </slider>
@@ -90,7 +90,7 @@
           <p>{{course.times | formatDate }}</p>
         </div>
         <div class="info gray fs12 mt10">
-          <p>报名人数&nbsp;&nbsp;{{studentCount}}人</p>
+         <!-- <p>报名人数&nbsp;&nbsp;{{studentCount}}人</p>-->
           <p>{{course.view_count}}次学习</p>
         </div>
         <mt-cell class="cell-card mt20" :title="teacher.space_name" @click.native="goToTeacher(teacher.id)">
@@ -681,7 +681,7 @@
           this.user = res.user
           this.intro = res.course.note
           this.teacher = res.teacher
-          this.studentCount = res.students.total
+        //  this.studentCount = res.students.total
           if (res.course.type == 1) {
             this.getPeriodList(res.course.course_id, this.page)
           }

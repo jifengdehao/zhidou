@@ -19,12 +19,12 @@
           <!-- <a class="btn btn-follow" href="#">关注</a> -->
         </div>
       </div>
-      <div class="swipe-wp mt20" v-if="space">
+      <div class="swipe-wp mt20" style="height: 4.7rem;">
         <a class="btn-edit" href="/classroom/banner">编辑</a>
         <slider v-if="swiper.length>0">
           <div v-for="item in swiper">
             <a href="javascript:;">
-              <img :src="item.url || $root.placeHolder.banner" style="height: 3rem;"/>
+              <img :src="item.url || $root.placeHolder.banner" style="height: 4.7rem;"/>
             </a>
           </div>
         </slider>

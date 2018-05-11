@@ -45,7 +45,7 @@
         </div>
       </div>
       <div class="cell">
-        <p>{{cash.frozen}}</p>
+        <p>{{cash.transfer}}</p>
         <p class="text">已提现金额</p>
         <!--<div class="last">
           <router-link class="link" to="/user/help">提现手续费&nbsp;&gt;</router-link>

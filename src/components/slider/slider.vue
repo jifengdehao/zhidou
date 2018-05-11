@@ -136,6 +136,7 @@
     position: relative
     width: 100%
     overflow: hidden
+
   .slider
     min-height: 1px
     .slider-group
@@ -173,4 +174,5 @@
           width: 20px
           border-radius: 5px
           background: #ffffff
+          opacity .3
 </style>

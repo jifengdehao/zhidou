@@ -1,6 +1,6 @@
 <template>
   <a class="course-item" v-if="type == 'index'">
-    <img class="course-cover" v-lazy="item.img || $root.placeHolder.cover" :alt="item.title">
+    <img class="course-cover" v-lazy="item.img || $root.placeHolder.cover" :alt="item.title" />
     <div class="course-info">
       <div class="info-bd">
         <h3 class="tit">{{ item.title }}</h3>

@@ -7,13 +7,13 @@
   <div class="scroll-wp" v-if="course">
     <div class="scroll-bd">
 
-      <div class="swipe-wp">
+      <div class="swipe-wp" style="height: 4.7rem;">
         <a href="javascript:void(0);" class="btn-edit"
            @click="$router.push('/classroom/series/period/banner/' + id)">编辑</a>
         <slider v-if="course.img.length>0">
           <div v-for="(item, key) in course.img" :key="key">
             <a href="javascript:;">
-              <img :src="item.url || $root.placeHolder.banner" style="height: 3rem"/>
+              <img :src="item.url || $root.placeHolder.banner" style="height: 4.7rem;"/>
             </a>
           </div>
         </slider>

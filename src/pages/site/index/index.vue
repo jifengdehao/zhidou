@@ -78,23 +78,22 @@
             </div>
           </slider>
         </div>
-        <!--<div class="index-panel" v-show="categoryActive === 0">
+        <div class="index-panel" v-show="categoryActive === 0">
           <ul class="bd">
             <li>
-              <a class="icon-sale" href="javascript:void(0);">课程分销</a>
+              <a class="icon-sale" href="/index/course-distribution">课程分销</a>
             </li>
             <li>
-              <a class="icon-bean" href="javascript:void(0);">赚取智豆</a>
+              <a class="icon-bean" href="/index/earn-bean">赚取智豆</a>
             </li>
-            <li>
+            <!--<li>
               <a class="icon-rank" href="javascript:void(0);">排行榜</a>
             </li>
             <li>
               <a class="icon-token" href="javascript:void(0);">挖豆</a>
-            </li>
+            </li>-->
           </ul>
         </div>
-        -->
         <div class="g-list-wp mt20">
           <mt-cell v-show="categoryActive === 0" class="g-line">
             <span slot="title" class="cell-text">每日精选</span>

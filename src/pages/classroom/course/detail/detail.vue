@@ -6,11 +6,11 @@
 <template>
   <div class="scroll-wp" v-if="course">
     <div class="scroll-bd">
-      <div class="swipe-wp">
+      <div class="swipe-wp" style="height: 4.7rem;">
         <slider v-if="banner.length > 0">
           <div v-for="(item, key) in banner" :key="key">
             <a href="javascript:;">
-              <img :src="item.url || $root.placeHolder.banner" style="height: 3rem"/>
+              <img :src="item.url || $root.placeHolder.banner" style="height: 4.7rem"/>
             </a>
           </div>
         </slider>
@@ -20,6 +20,15 @@
         <div class="info mt10 fs12 gray">
           <p>时间<span class="ml20 red">{{ course.times | formatDate }}</span></p>
         </div>
+      </div>
+      <!--报名人数-->
+      <div class="detail-student">
+        <p class="hd fs12 gray">报名人数<span class="ml20">{{students.total}}人</span></p>
+        <div class="bd">
+          <img class="avatar" :src="item.img || $root.placeHolder.avatar" v-for="(item,index) in students.user"
+               :key="index" width="20" height="20">
+        </div>
+        <div class="ft ml10"><i></i></div>
       </div>
       <div class="detail-audio mt20 fs12">
         <div class="hd gray" v-if="course.file_type == 1">录音文件</div>
@@ -72,6 +81,7 @@
       return {
         id: this.$route.params.id,
         course: {},
+        students: {},
         intro: [],
         banner: []
       }
@@ -104,6 +114,8 @@
           console.log(res)
           if (res) {
             this.course = res;
+            this.students.total = res.sign_total
+            this.students.user = res.sign_user
             if (res.note.length > 0) {
               this.intro = res.note
             }
@@ -189,6 +201,39 @@
           border-color: $color-green;
           color: $color-green;
         }
+      }
+    }
+  }
+
+  .detail-student {
+    display: flex;
+    align-items: center;
+    padding: .15rem .2rem;
+    background-color: #ffffff;
+    border-bottom: .01rem solid $color-border;
+    .hd {
+      flex: 1;
+    }
+    .bd {
+      .avatar {
+        float: left;
+        margin-right: .04rem;
+      }
+    }
+    .ft {
+      display: flex;
+      align-items: center;
+      i, &:before, &:after {
+        display: block;
+        margin-right: .07rem;
+        width: .1rem;
+        height: .1rem;
+        overflow: hidden;
+        border-radius: 50%;
+        background: #7f7f7f;
+      }
+      &:before, &:after {
+        content: "";
       }
     }
   }

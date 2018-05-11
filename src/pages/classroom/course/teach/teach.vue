@@ -7,11 +7,11 @@
   <div class="scroll-wp">
     <div class="scroll-bd" ref="scrollBody">
       <div v-if="course.file_type == 1">
-        <div class="swipe-wp">
+        <div class="swipe-wp" style="height: 4.7rem;">
           <slider v-if="banner.length > 0">
             <div v-for="(item, key) in banner" :key="key">
               <a href="javascript:;">
-                <img :src="item || $root.placeHolder.banner" style="height: 3rem"/>
+                <img :src="item || $root.placeHolder.banner" style="height: 4.7rem;"/>
               </a>
             </div>
           </slider>

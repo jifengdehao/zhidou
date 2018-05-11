@@ -17,7 +17,7 @@
           <upload-image
             :success="upload.success">
             <img class="upload-icon" src="../../../../assets/icon-img.png" alt="删除">
-            <p>上传Banner</p>
+            <p>上传Banner 750 x 470</p>
           </upload-image>
         </div>
       </div>
@@ -45,9 +45,12 @@
     },
     created() {
       this.API.anchorSpace().then((res) => {
-        let space = res.space;
-        if (space.img && space.img.length) {
-          this.list = space.img;
+        if (res) {
+          console.log(res)
+          let space = res.space
+          if (space.img.length) {
+            this.list = space.img;
+          }
         }
       });
     },
