@@ -9,6 +9,12 @@
   export default {
     name: "oauth",
     created() {
+      if (this.$route.query.goto) {
+        this.goto = this.$route.query.goto
+      } else {
+        this.goto = ''
+      }
+      console.log(this.goto)
       this.oauth()
     },
     methods: {
@@ -30,10 +36,10 @@
             host = 'dev.zhiliaotv.com'
           }
           // http://dev.zhiliaotv.com/auth-login/mpweixin
-          let webUrl = 'http://' + host + '/auth-login/mpweixin'
+          let webUrl = 'http://' + host + '/auth-login/mpweixin?goto=' + this.goto
           window.location.href = webUrl
         } else {
-          this.$router.push('/login')
+          this.$router.push('/login?goto=' + this.goto)
         }
       }
     }

@@ -16,7 +16,8 @@
             :success="upload.success">
             <img class="upload-icon" src="../../../../assets/icon-img.png" width="100%"/>
             <p>上传系列课海报</p>
-            <p class="gray">尺寸：750x470像素</p>
+           <!-- <p class="gray">尺寸：750x470像素</p>-->
+            <p class="gray" style="margin-top: 0;">(上传图片要求 长:宽=750:470)</p>
           </upload-image>
         </div>
       </div>

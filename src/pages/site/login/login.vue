@@ -44,6 +44,9 @@
       window.addEventListener("popstate", function () {
         vm.$router.push('/')
       })
+      if (this.$route.query.goto) {
+        this.goto = this.$route.query.goto
+      }
     },
     mounted() {
       if (this.isWeiXin()) {
@@ -55,7 +58,6 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      console.log(to)
       let isLogin
       //let isLogin = Cookie.get('__zdb_dev__')  // 验证是否已经登录
       if (/www\.zhiliaotv\.com/.test(location.host)) {
@@ -63,7 +65,6 @@
       } else {
         isLogin = Cookie.get('__zdb_dev_js__')
       }
-      console.log(isLogin)
       if (isLogin) {
         next('/index')
         return false
@@ -117,6 +118,10 @@
           this.API.login(params).then((res) => {
             if (res) {
               this.$toast('登录成功');
+              if (this.goto) {
+                window.location.href = this.goto
+                return
+              }
               setTimeout(() => {
                 vm.$router.push('/index');
               }, 2000);

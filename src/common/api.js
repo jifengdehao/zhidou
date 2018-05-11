@@ -56,7 +56,6 @@ const handleError = (res) => {
     message = '传输数据错误';
   } else if (status === 401) {
     message = '请先登录';
-    console.log(location)
     return router.push('/oauth');
   } else if (status === 404) {
     message = '请求接口不存在';

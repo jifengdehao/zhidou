@@ -166,7 +166,7 @@
       return {
         isInvite: false, // 是否设置邀请分享
         tab: 0,
-        step: 2,
+        step: 1,
         audioFiles: [], // 音频文件
         videoFile: {}, //　视频文件
         categoryName: '', // 分类名称
@@ -374,6 +374,7 @@
           } else {
             params.is_share_gain = 0
           }
+          // params.price = parseInt(params.price).toFixed(1)
           params.price = Math.floor(this.params.price * 10) / 10
           console.log(params)
           vm.API.generateCourse(params).then((res) => {

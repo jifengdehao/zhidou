@@ -150,7 +150,6 @@
         </div>
       </div>
     </div>
-
     <!-- <div class="share" @click="share">分享课程</div>
      <div class="share-wrapper" v-show="isShare">
        <div class="mask"></div>
@@ -166,6 +165,7 @@
   import Slider from '@/components/slider/slider'
   import {weixinShare} from '@/common/weixin'
   import Scroll from '@/components/scroll/scroll'
+  import Cookie from 'js-cookie'
 
   export default {
     components: {
@@ -196,7 +196,9 @@
     },
     created() {
       this.getClassDetails(this.id)
-     /* this.getUserInfo()*/
+      if (this.$route.query.invite_code) {
+        this.shareCode = this.$route.query.invite_code
+      }
     },
     computed: {
       isPay() {
@@ -223,6 +225,20 @@
       }
     },
     methods: {
+      // 验证是否登录
+      isLoign() {
+        let isLogin
+        if (/www\.zhiliaotv\.com/.test(location.host)) {
+          isLogin = Cookie.get('__zlt_js__')
+        } else {
+          isLogin = Cookie.get('__zdb_dev_js__')
+        }
+        if (isLogin) {
+          return true
+        } else {
+          return false
+        }
+      },
       getUserInfo() {
         this.API.userBaseInfo().then((res) => {
           if (res) {
@@ -233,28 +249,55 @@
       },
       initShare() {
         if (this.isWeixin()) {
-          const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
-          let vm = this
-          this.API.wechatJSSDK(url).then((res) => {
-            let data = {
-              appId: res.appId,
-              timestamp: res.timestamp,
-              nonceStr: res.nonceStr,
-              signature: res.signature
-            }
-            let content = {
-              title: '知了TV',
-              desc: this.course.title,
-              link: url,
-              imgUrl: this.course.img[0] || this.$root.placeHolder.cover
-            }
-            weixinShare(data, content, function (res) {
-              console.log(res)
-              vm.$toast('分享成功~')
+          if (this.isLoign() && this.course.is_share == 1) {
+            debugger
+            this.getUserInfo()
+            const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
+            let vm = this
+            this.API.wechatJSSDK(url).then((res) => {
+              let data = {
+                appId: res.appId,
+                timestamp: res.timestamp,
+                nonceStr: res.nonceStr,
+                signature: res.signature
+              }
+              let content = {
+                title: '知了TV',
+                desc: this.course.title,
+                link: url + '?invite_code=' + this.user.invite_code,
+                imgUrl: this.course.img[0] || this.$root.placeHolder.cover
+              }
+              weixinShare(data, content, function (res) {
+                console.log(res)
+                vm.$toast('分享成功~')
+              })
+            }).catch((err) => {
+              console.log(err)
             })
-          }).catch((err) => {
-            console.log(err)
-          })
+          } else {
+            const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
+            let vm = this
+            this.API.wechatJSSDK(url).then((res) => {
+              let data = {
+                appId: res.appId,
+                timestamp: res.timestamp,
+                nonceStr: res.nonceStr,
+                signature: res.signature
+              }
+              let content = {
+                title: '知了TV',
+                desc: this.course.title,
+                link: url,
+                imgUrl: this.course.img[0] || this.$root.placeHolder.cover
+              }
+              weixinShare(data, content, function (res) {
+                console.log(res)
+                vm.$toast('分享成功~')
+              })
+            }).catch((err) => {
+              console.log(err)
+            })
+          }
         }
       },
       isWeixin() {
@@ -267,29 +310,55 @@
       },
       share() {
         if (this.isWeixin()) {
-          this.isShare = !this.isShare
-          const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
-          let vm = this
-          this.API.wechatJSSDK(url).then((res) => {
-            let data = {
-              appId: res.appId,
-              timestamp: res.timestamp,
-              nonceStr: res.nonceStr,
-              signature: res.signature
-            }
-            let content = {
-              title: '知了TV',
-              desc: this.course.title,
-              link: url,
-              imgUrl: this.course.img[0] || this.$root.placeHolder.cover
-            }
-            weixinShare(data, content, function (res) {
-              console.log(res)
-              vm.$toast('分享成功~')
+          if (this.isLoign() && this.course.is_share == 1) {
+            this.getUserInfo()
+            const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
+            let vm = this
+            this.API.wechatJSSDK(url).then((res) => {
+              let data = {
+                appId: res.appId,
+                timestamp: res.timestamp,
+                nonceStr: res.nonceStr,
+                signature: res.signature
+              }
+              let content = {
+                title: '知了TV',
+                desc: this.course.title,
+                link: url + '?invite_code=' + this.user.invite_code,
+                imgUrl: this.course.img[0] || this.$root.placeHolder.cover
+              }
+              weixinShare(data, content, function (res) {
+                console.log(res)
+                vm.$toast('分享成功~')
+              })
+            }).catch((err) => {
+              console.log(err)
             })
-          }).catch((err) => {
-            console.log(err)
-          })
+          } else {
+            this.isShare = !this.isShare
+            const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
+            let vm = this
+            this.API.wechatJSSDK(url).then((res) => {
+              let data = {
+                appId: res.appId,
+                timestamp: res.timestamp,
+                nonceStr: res.nonceStr,
+                signature: res.signature
+              }
+              let content = {
+                title: '知了TV',
+                desc: this.course.title,
+                link: url,
+                imgUrl: this.course.img[0] || this.$root.placeHolder.cover
+              }
+              weixinShare(data, content, function (res) {
+                console.log(res)
+                vm.$toast('分享成功~')
+              })
+            }).catch((err) => {
+              console.log(err)
+            })
+          }
         } else {
           this.$toast('请在微信客户端分享~')
         }
@@ -373,27 +442,32 @@
           this.orderVisible = true
           this.getUserBaseBalance()
         } else if (this.user.is_enrolled === 0 && this.course.pay_type === 1) {
-          // 现金支付
-          this.API.orderPay({course_id: this.id, pay_type: 2}).then((res) => {
-            let data = res.jsApiParams
-            let vm = this
-            weixinPay(data, function (res) {
-              if (res) {
-                if (vm.type === 0) {
-                  return vm.$router.push('/course/teach/' + vm.course.period_id)
-                }
-                if (vm.type === 1) {
-                  if (vm.periodList.length > 0) {
-                    return vm.$router.push('/course/teach/' + vm.periodList[0].id)
-                  } else {
-                    vm.$toast('当前课程还没开课，请等待~')
+          if (this.isLoign()) {
+            // 现金支付
+            this.API.orderPay({course_id: this.id, pay_type: 2, invite_code: this.shareCode}).then((res) => {
+              let data = res.jsApiParams
+              let vm = this
+              weixinPay(data, function (res) {
+                if (res) {
+                  if (vm.type === 0) {
+                    return vm.$router.push('/course/teach/' + vm.course.period_id)
+                  }
+                  if (vm.type === 1) {
+                    if (vm.periodList.length > 0) {
+                      return vm.$router.push('/course/teach/' + vm.periodList[0].id)
+                    } else {
+                      vm.$toast('当前课程还没开课，请等待~')
+                    }
                   }
                 }
-              }
+              })
+            }).catch((err) => {
+              console.log(err)
             })
-          }).catch((err) => {
-            console.log(err)
-          })
+          } else {
+            this.$router.push('/oauth?goto=' + location.href)
+          }
+
         } else if (this.user.is_enrolled === 0 && this.course.pay_type === 0) {
           //报名进入
           this.API.freeEnroll({id: this.id}).then((res) => {
@@ -455,25 +529,31 @@
       },
       // 智豆支付
       payOrder() {
-        this.API.orderPay({course_id: this.id, pay_type: 1}).then((res) => {
-          if (res) {
-            this.$toast('支付成功')
-            setTimeout(() => {
-              if (this.type === 0) {
-                return this.$router.push('/course/teach/' + this.course.period_id)
-              }
-              if (this.type === 1) {
-                if (this.periodList.length > 0) {
-                  return this.$router.push('/course/teach/' + this.periodList[0].id)
-                } else {
-                  this.$toast('当前课程还没开课，请等待~')
+        if (this.isLoign()) {
+          this.getUserInfo()
+
+          this.API.orderPay({course_id: this.id, pay_type: 1, invite_code: this.shareCode}).then((res) => {
+            if (res) {
+              this.$toast('支付成功')
+              setTimeout(() => {
+                if (this.type === 0) {
+                  return this.$router.push('/course/teach/' + this.course.period_id)
                 }
-              }
-            }, 3000)
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
+                if (this.type === 1) {
+                  if (this.periodList.length > 0) {
+                    return this.$router.push('/course/teach/' + this.periodList[0].id)
+                  } else {
+                    this.$toast('当前课程还没开课，请等待~')
+                  }
+                }
+              }, 3000)
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
+        } else {
+          this.$router.push('/oauth?goto=' + location.href)
+        }
       },
     }
   }

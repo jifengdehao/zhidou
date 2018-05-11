@@ -157,7 +157,7 @@
           this.initTabScroll()
         })
       },
-      'categoryActive'(){
+      'categoryActive'() {
         this.loadMore(this.page)
       }
     },
