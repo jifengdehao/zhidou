@@ -24,7 +24,7 @@
         <slider v-if="swiper.length>0">
           <div v-for="(item,index) in swiper" :key="index">
             <a href="javascript:;">
-              <img :src="item.url || $root.placeHolder.banner" style="height: 4rem;"/>
+              <img :src="item.url || $root.placeHolder.banner" style="height: 4.7rem;"/>
             </a>
           </div>
         </slider>
