@@ -17,7 +17,6 @@
           </div>
         </slider>
         <div class="sale-share" v-if="course.is_share == 1" @click="share">
-          <i class="icon-share"></i>
           <div>
             <div class="icon-content" v-if="course.pay_type == 1">赚{{course.gain_price}}元</div>
             <div class="icon-content" v-if="course.pay_type == 2">赚{{course.gain_price}}个豆</div>
@@ -598,26 +597,26 @@
 
   .sale-share {
     position: fixed;
-    top: 0;
+    top: .2rem;
     right: 0;
     z-index: 50;
     .icon-share {
-      display: block;
+      display: inline-block;
       width: .44rem;
-      height: .37rem;
+      height: .38rem;
       background: url("./icon-share-01.png") no-repeat center;
       background-size: contain;
-      margin: .2rem .2rem .2rem auto;
+      margin: 0 .2rem 0 auto;
     }
     .icon-content {
-      background: #f47a6d url("./icon-share-02.png") no-repeat 8% center;
-      background-size: 11px 11px;
+      background: #f47a6d url("./icon-share-03.png") no-repeat 15% center;
+      background-size: 14px 12px;
       color: #ffffff;
-      font-size: .24rem;
-      padding-right: .1rem;
-      padding-left: .4rem;
-      border-bottom-left-radius: 10px;
-      border-top-left-radius: 10px;
+      font-size: .28rem;
+      padding: .08rem .1rem .08rem .6rem;
+      border-bottom-left-radius: 50px;
+      border-top-left-radius: 50px;
+      line-height: normal;
     }
   }
 

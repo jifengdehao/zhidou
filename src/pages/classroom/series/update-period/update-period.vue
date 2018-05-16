@@ -9,8 +9,8 @@
       <div class="swipe-wp" style="height: 4.7rem;">
         <a href="javascript:void(0);" class="btn-edit"
            @click="$router.push('/classroom/series/period/banner/' + id)">编辑</a>
-        <slider v-if="course.img.length>0">
-          <div v-for="(item, key) in course.img" :key="key">
+        <slider v-if="banner.length>0">
+          <div v-for="(item, key) in banner" :key="key">
             <a href="javascript:;">
               <img :src="item.url || $root.placeHolder.banner" style="height: 4.7rem;"/>
             </a>
@@ -90,6 +90,7 @@
   export default {
     data() {
       return {
+        banner: [],
         id: this.$route.params.id, // 课时Id
         course: {},// 课时详情
         files: [], // 上传音频文件
@@ -114,6 +115,9 @@
           if (res.file_type == 1) {
             this.getUploadAudioKey()
           }
+          if (res.img.length > 0) {
+            this.banner = res.img
+          }
         }
       });
     },
@@ -129,12 +133,12 @@
       // 获取上传视频文件
       uploadVideo(e) {
         let file = e.target.files[0]
-        let arrType =['MP4','AVI','WMV']
+        let arrType = ['MP4', 'AVI', 'WMV']
         let fileType = file.type.split('/')[1]
-        if(arrType.indexOf(fileType.toUpperCase()) > -1){
+        if (arrType.indexOf(fileType.toUpperCase()) > -1) {
           this.videoFile = file
           this.videoStatus = 0
-        }else{
+        } else {
           this.$toast('你上传的文件格式不正确')
         }
       },
@@ -175,15 +179,15 @@
         ajax({
           url: '/api/user/anchor/video-key',
           type: 'post',
-          param:{
+          param: {
             'Action': 'GetVodSignatureV2'
           },
           async: true,
           datatype: 'json',
-          success:function (data) {
+          success: function (data) {
             callback && callback(JSON.parse(data))
           },
-          error: function(){
+          error: function () {
             console.log('error')
           }
         })
@@ -246,7 +250,7 @@
             return prevent()
           }
           // 过滤非MP3文件
-          if(!/\.(mp3)$/i.test(newFile.name)){
+          if (!/\.(mp3)$/i.test(newFile.name)) {
             this.$toast('你上传的文件格式不正确')
             return prevent()
           }
@@ -261,7 +265,7 @@
         if (newFile && oldFile) {
           // create
           console.log('update', newFile)
-          if(this.$refs.upload.active){
+          if (this.$refs.upload.active) {
             Indicator.open();
             this.audioStatus = 1
           }

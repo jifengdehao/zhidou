@@ -313,9 +313,9 @@
         width: 3rem;
         height: .76rem;
         border-radius: .38rem;
-        background: linear-gradient(left, $color-red-begin, $color-red-end) no-repeat;
+        background: linear-gradient(left, $color-red-begin, $color-red-end) no-repeat !important;
         &.btn-blue {
-          background: linear-gradient(left, $color-blue-begin, $color-blue-end) no-repeat;
+          background: linear-gradient(left, $color-blue-begin, $color-blue-end) no-repeat !important;
         }
       }
     }

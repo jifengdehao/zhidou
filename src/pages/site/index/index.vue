@@ -187,9 +187,12 @@
       weixinShareBg() {
         let head = document.getElementsByTagName('head')[0]
         let div = document.createElement('div')
+        let p = document.createElement('p')
         let img = document.createElement('img')
-        img.src = 'http://www.zhiliaotv.com/static/img/common/logo.png'
+        img.src = 'http://www.zhiliaotv.com/static/img/common/share.png'
+        p.innerText = '知了TV-让学习成为一种生产力'
         div.style = 'margin:0 auto;width:0px;height:0px;overflow:hidden;'
+        div.appendChild(p)
         div.appendChild(img)
         head.appendChild(div)
       },
@@ -205,7 +208,7 @@
       initShare() {
         if (this.isWeixin()) {
           const url = 'http://www.zhiliaotv.com/index'
-          const imgUrl = 'http://www.zhiliaotv.com/static/img/common/logo.png'
+          const imgUrl = 'http://www.zhiliaotv.com/static/img/common/share.png'
           let vm = this
           this.API.wechatJSSDK(url).then((res) => {
             let content = {

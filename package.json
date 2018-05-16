@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "better-scroll": "^0.1.15",
     "js-cookie": "^2.2.0",
     "mint-ui": "^2.2.13",

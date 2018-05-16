@@ -9,6 +9,7 @@ import components from './components';  // 组件扩展
 import {formatDate, trimString} from '@/common/util.js';
 import Cookie from 'js-cookie';
 import VueClipboard from 'vue-clipboard2'
+import 'babel-polyfill'
 
 Vue.use(VueClipboard)
 Vue.use(Mint);

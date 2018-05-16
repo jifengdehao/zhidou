@@ -7,7 +7,7 @@
   <scroll :data="list" class="page-wp distribution" style="overflow-y: hidden" ref="scroll" :listenScroll="true"
           @scroll="scroll">
     <div>
-      <ul class="list">
+      <ul class="list" v-if="list.length>0">
         <router-link tag="li" class="item" v-for="(item,index) in list" :key="index"
                      :to="'/course/detail/'+item.id">
           <img v-lazy="item.img || $root.placeHolder.banner" width="100%" style="height:3rem;"/>
@@ -23,8 +23,9 @@
           </div>
         </router-link>
       </ul>
+      <div class="gray mt30 tac" v-else>暂无分销课程</div>
     </div>
-	<router-link tag="div" class="link-home" to="/"></router-link>
+    <router-link tag="div" class="link-home" to="/"></router-link>
   </scroll>
   <!--<div class="page-wp distribution">
     <ul class="list">

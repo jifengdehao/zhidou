@@ -73,11 +73,14 @@
     },
     created() {
       this.weixinShareBg()
-      this.user = JSON.parse(sessionStorage.getItem('user'))
       this.getInviteList(this.page)
-    },
-    mounted() {
-      this.share()
+      this.API.userBaseInfo().then((res) => {
+        if (res) {
+          console.log(res)
+          this.share(res)
+          this.user = res
+        }
+      })
     },
     beforeRouteEnter(to, from, next) {
       // XXX: 修复iOS版微信HTML5 History兼容性问题
@@ -103,7 +106,7 @@
         let head = document.getElementsByTagName('head')[0]
         let div = document.createElement('div')
         let img = document.createElement('img')
-        img.src = 'http://www.zhiliaotv.com/static/img/invite.jpg'
+        img.src = 'http://www.zhiliaotv.com/static/img/common/invite.jpg'
         div.style = 'margin:0 auto;width:0px;height:0px;overflow:hidden;'
         div.appendChild(img)
         head.appendChild(div)
@@ -114,13 +117,13 @@
       onError() {
         console.log('error')
       },
-      share() {
+      share(user) {
         let vm = this
         setTimeout(() => {
           if (this.isWeixin()) {
             const url = 'http://www.zhiliaotv.com/invite'
-            const registerUrl = 'http://www.zhiliaotv.com/register/?invite_code=' + vm.user.invite_code // 注册的url
-            const imgUrl = 'http://www.zhiliaotv.com/static/img/invite.jpg'
+            const registerUrl = 'http://www.zhiliaotv.com/register/?invite_code=' + user.invite_code // 注册的url
+            const imgUrl = 'http://www.zhiliaotv.com/static/img/common/invite.jpg'
             this.API.wechatJSSDK(url).then((res) => {
               let content = {
                 title: '知了TV',
@@ -172,7 +175,7 @@
           let vm = this
           const url = 'http://www.zhiliaotv.com/invite'
           const registerUrl = 'http://www.zhiliaotv.com/register/?invite_code=' + vm.user.invite_code // 注册的url
-          const imgUrl = 'http://www.zhiliaotv.com/static/img/invite.jpg'
+          const imgUrl = 'http://www.zhiliaotv.com/static/img/common/invite.jpg'
           this.API.wechatJSSDK(url).then((res) => {
             let content = {
               title: '知了TV',
