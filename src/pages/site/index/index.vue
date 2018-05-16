@@ -69,7 +69,7 @@
             </li>
           </ul>
         </div>
-        <div v-show="categoryActive === 0" class="swipe-wp">
+        <div v-show="categoryActive === 0" class="swipe-wp" style="height: 3rem;">
           <slider v-if="banner.length>0">
             <div v-for="item in banner">
               <a :href="item.url|| '/'">
@@ -112,6 +112,7 @@
   import Slider from '@/components/slider/slider'
   import Scroll from '@/components/scroll/scroll'
   import BScroll from 'better-scroll'
+  import {weixinShare} from '@/common/weixin'
 
   export default {
     name: 'Index',
@@ -150,6 +151,8 @@
         console.log(err);
       });
       this.loadMore(this.page)
+      this.weixinShareBg()
+      this.initShare()
     },
     watch: {
       'resourceGuide'() {
@@ -161,7 +164,69 @@
         this.loadMore(this.page)
       }
     },
+    beforeRouteEnter(to, from, next) {
+      // XXX: 修复iOS版微信HTML5 History兼容性问题
+      console.log(isIOSWeChat())
+      if (isIOSWeChat() && to.path !== location.pathname) {
+        // 此处不可使用location.replace
+        location.assign(to.fullPath)
+      } else {
+        next()
+      }
+
+      function isIOSWeChat() {
+        let ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/(iPhone|iPod|iPad);?/i)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
     methods: {
+      weixinShareBg() {
+        let head = document.getElementsByTagName('head')[0]
+        let div = document.createElement('div')
+        let img = document.createElement('img')
+        img.src = 'http://www.zhiliaotv.com/static/img/common/logo.png'
+        div.style = 'margin:0 auto;width:0px;height:0px;overflow:hidden;'
+        div.appendChild(img)
+        head.appendChild(div)
+      },
+      isWeixin() {
+        let ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      // 初始分享
+      initShare() {
+        if (this.isWeixin()) {
+          const url = 'http://www.zhiliaotv.com/index'
+          const imgUrl = 'http://www.zhiliaotv.com/static/img/common/logo.png'
+          let vm = this
+          this.API.wechatJSSDK(url).then((res) => {
+            let content = {
+              title: '知了TV',
+              desc: '中本聪预测，智豆区块链数字资产价值将......',
+              link: url,
+              imgUrl: imgUrl,
+              width: '300',
+              height: '300'
+            }
+            weixinShare(res, content, function (res) {
+              vm.$toast('分享成功')
+              console.log(res)
+            }, function (err) {
+              console.log(err)
+            })
+          }).catch((err) => {
+            console.log(err)
+          })
+        }
+      },
       scroll() {
         if (this.pageCount > this.page) {
           this.page++

@@ -8,6 +8,11 @@
 <script>
   export default {
     name: "oauth",
+    data() {
+      return {
+        goto: '' // 链接
+      }
+    },
     created() {
       if (this.$route.query.goto) {
         this.goto = this.$route.query.goto

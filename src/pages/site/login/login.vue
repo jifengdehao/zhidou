@@ -25,7 +25,8 @@
           password: ''
         },
         type: this.$route.query.type,
-        code: this.$route.query.code
+        code: this.$route.query.code,
+        goto: this.$route.query.goto
       };
     },
     created() {
@@ -40,12 +41,18 @@
         this.code = sessionStorage.getItem('code')
       }
       // 监听返回事件 默认返回首页
-      let vm = this
-      window.addEventListener("popstate", function () {
-        vm.$router.push('/')
-      })
-      if (this.$route.query.goto) {
-        this.goto = this.$route.query.goto
+      if (this.goto) {
+        sessionStorage.setItem('goto', this.goto)
+        let vm = this
+        window.addEventListener("popstate", function () {
+          window.location.href = vm.goto
+        })
+      } else {
+        this.goto = sessionStorage.getItem('goto')
+        let vm = this
+        window.addEventListener("popstate", function () {
+          vm.$router.push('/')
+        })
       }
     },
     mounted() {
@@ -59,8 +66,7 @@
     },
     beforeRouteEnter(to, from, next) {
       let isLogin
-      //let isLogin = Cookie.get('__zdb_dev__')  // 验证是否已经登录
-      if (/www\.zhiliaotv\.com/.test(location.host)) {
+      if (/www\.zhiliaotv\.com/.test(location.host) || /test\.zhiliaotv\.com/.test(location.host)) {
         isLogin = Cookie.get('__zlt_js__')
       } else {
         isLogin = Cookie.get('__zdb_dev_js__')
@@ -92,24 +98,21 @@
           return;
         }
         if (this.isWeiXin() && this.type && this.code) {
-          /*if (this.type) {
-            params.type = this.type
-          } else {
-            params.type = sessionStorage.getItem('type')
-          }
-          if (this.code) {
-            params.code = this.code
-          } else {
-            params.code = sessionStorage.getItem('code')
-          }*/
           params.type = this.type
           params.code = this.code
           this.API.loginOauth(params).then((res) => {
             if (res) {
-              this.$toast('登录成功');
-              setTimeout(() => {
-                vm.$router.push('/index');
-              }, 2000);
+              this.$toast('登录成功')
+              let vm = this
+              if (this.goto) {
+                setTimeout(() => {
+                  window.location.href = vm.goto
+                }, 2000)
+              } else {
+                setTimeout(() => {
+                  vm.$router.push('/index');
+                }, 2000);
+              }
             }
           }).catch((err) => {
             console.log(err);
@@ -118,13 +121,16 @@
           this.API.login(params).then((res) => {
             if (res) {
               this.$toast('登录成功');
+              let vm = this
               if (this.goto) {
-                window.location.href = this.goto
-                return
+                setTimeout(() => {
+                  window.location.href = vm.goto
+                }, 2000)
+              } else {
+                setTimeout(() => {
+                  vm.$router.push('/index');
+                }, 2000);
               }
-              setTimeout(() => {
-                vm.$router.push('/index');
-              }, 2000);
             }
           }).catch((err) => {
             console.log(err);

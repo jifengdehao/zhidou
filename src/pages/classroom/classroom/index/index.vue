@@ -4,9 +4,9 @@
 * @Description: 我的直播间
 */
 <template>
-  <scroll class="scroll-bd" :data="space.img" style="overflow-y: hidden;">
+  <scroll class="scroll-bd" :data="single.list" style="overflow-y: hidden;" ref="scroll">
     <div>
-      <div class="author-wp mt20" v-if="space">
+      <div class="author-wp mt20">
         <div class="author-hd">
           <img v-lazy="space.avatar || $root.placeHolder.avatar" :alt="space.title">
         </div>
@@ -66,7 +66,7 @@
       </div>
 
       <div class="g-list-wp mt20">
-        <mt-cell is-link to="/classroom/classlist/1" v-if="series.count">
+        <mt-cell is-link to="/classroom/classlist/1" v-if="series.count>4">
           <div slot="title" class="fs18">
             系列课({{ series.count }})
             <!-- <span class="btn-category blue fs15 ml10" @click.stop.prevent="$router.push('/classroom/series/category')">分类管理</span> -->
@@ -84,7 +84,7 @@
         </div>
         <div v-else class="tac" style="padding: .5rem;">暂无课程</div>
       </div>
-      <div class="g-list-wp mt20" v-if="single">
+      <div class="g-list-wp mt20">
         <mt-cell is-link to="/classroom/classlist/0" v-if="single.count > 4">
           <span slot="title" class="fs18">单次课({{ single.count }})</span>
         </mt-cell>
@@ -130,6 +130,7 @@
       // 我的直播间
       getUserSpace() {
         this.API.anchorSpace().then((res) => {
+          console.log(res)
           this.space = res.space;
           this.single = res.single;
           this.series = res.series;
@@ -142,7 +143,7 @@
       },
       formatSolution(s) {
         if (s) {
-          return s.replace(/\n/g, '<br/>')
+          return s.replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')
         } else {
           return ''
         }
@@ -152,10 +153,12 @@
           this.select = true
           this.seeAllTro = true
           this.$refs.introP.className = ''
+          this.$refs.scroll.refresh()
         } else {
           this.select = false
           this.seeAllTro = false
           this.$refs.introP.className = 'overFlow'
+          this.$refs.scroll.refresh()
         }
       },
       handleUpdateTitle() {

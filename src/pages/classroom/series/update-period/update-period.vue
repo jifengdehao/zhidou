@@ -6,7 +6,6 @@
 <template>
   <div class="scroll-wp" v-if="course">
     <div class="scroll-bd">
-
       <div class="swipe-wp" style="height: 4.7rem;">
         <a href="javascript:void(0);" class="btn-edit"
            @click="$router.push('/classroom/series/period/banner/' + id)">编辑</a>
@@ -18,7 +17,6 @@
           </div>
         </slider>
       </div>
-
       <div class="form-wp mt20 mint-input-tar">
         <mt-field v-model="course.title" label="课程主题" placeholder="课程主题最多40个字"></mt-field>
 

@@ -21,6 +21,7 @@
     <img src="./earn-04.png" width="100%"/>
     <h3 class="tac title">方式五</h3>
     <img src="./earn-05.png" width="100%"/>
+	<router-link tag="div" class="link-home" to="/"></router-link>
   </div>
 </template>
 

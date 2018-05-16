@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
   let isLogin
   let path = to.path.substr(1)
   //let isLogin = Cookie.get('__zdb_dev__')  // 验证是否已经登录
-  if (/www\.zhiliaotv\.com/.test(location.host)) {
+  if (/www\.zhiliaotv\.com/.test(location.host) || /test\.zhiliaotv\.com/.test(location.host)) {
     isLogin = Cookie.get('__zlt_js__')
   } else {
     isLogin = Cookie.get('__zdb_dev_js__')

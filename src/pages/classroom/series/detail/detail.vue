@@ -19,6 +19,7 @@
         <h2 class="tit fs15" v-html="formatTitle(course.title)"></h2>
         <div class="info mt10 fs12 gray">
           <p>已开课{{ course.period_count }}节 | 预计更新{{ course.plan_period_count }}节课</p>
+          <span>{{course.study_count}}次学习</span>
         </div>
       </div>
       <!--报名人数-->

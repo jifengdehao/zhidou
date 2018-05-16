@@ -91,9 +91,7 @@
       <div class="select-bd">
         <ul class="tab-hd">
           <li class="icon-free" :class="{active: tab== 0}" @click="selectType(0)"><i></i>公开</li>
-          <li class="icon-private" :class="{active: tab == 3}"
-              @click="selectType(3)"><i></i>加密
-          </li>
+          <li class="icon-private" :class="{active: tab == 3}" @click="selectType(3)"><i></i>加密</li>
           <li class="icon-cash" :class="{active: tab == 4}" @click="selectType(4)"><i></i>收费</li>
           <!-- <li class="icon-cash" :class="{active: params.pay_type == 1}"
                @click="params.pay_type = 1"><i></i>现金收费
@@ -297,7 +295,7 @@
       },
       // 课程分类
       getCourseClassify() {
-        this.API.resourceGuide().then(((res) => {
+        this.API.courseGuide().then(((res) => {
           let list = res;
           list.forEach(item => {
             item.method = this.onSelect;
@@ -374,7 +372,6 @@
           } else {
             params.is_share_gain = 0
           }
-          // params.price = parseInt(params.price).toFixed(1)
           params.price = Math.floor(this.params.price * 10) / 10
           console.log(params)
           vm.API.generateCourse(params).then((res) => {

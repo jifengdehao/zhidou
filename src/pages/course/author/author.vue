@@ -4,7 +4,7 @@
 * @Description: 用户-主播空间
 */
 <template>
-  <scroll class="scroll-bd" :data="swiper" style="overflow:hidden;">
+  <scroll class="scroll-bd" :data="swiper" style="overflow:hidden;" ref="scroll">
     <div>
       <div class="author-wp" v-if="space">
         <div class="author-hd">
@@ -24,7 +24,7 @@
         <slider v-if="swiper.length>0">
           <div v-for="(item,index) in swiper" :key="index">
             <a href="javascript:;">
-              <img :src="item.url || $root.placeHolder.banner" style="height: 3rem"/>
+              <img :src="item.url || $root.placeHolder.banner" style="height: 4rem;"/>
             </a>
           </div>
         </slider>
@@ -34,7 +34,7 @@
           <h3>简介</h3>
         </div>
         <div class="intro-bd" v-if="space.intro">
-          <p class="overFlow" ref="introP">{{ space.intro }}</p>
+          <p class="overFlow" ref="introP" v-html="formatSolution(space.intro)"></p>
         </div>
         <div class="intro-bd tac" v-else>暂无简介</div>
         <div class="intro-ft" @click="seeAllIntro">
@@ -105,15 +105,24 @@
       this.getAuthorDetails()
     },
     methods: {
+      formatSolution(s) {
+        if (s) {
+          return s.replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')
+        } else {
+          return ''
+        }
+      },
       seeAllIntro() {
         if (!this.seeAllTro) {
           this.seeAllTro = true
           this.select = true
           this.$refs.introP.className = ''
+          this.$refs.scroll.refresh()
         } else {
           this.select = false
           this.seeAllTro = false
           this.$refs.introP.className = 'overFlow'
+          this.$refs.scroll.refresh()
         }
       },
       // 主播空间信息

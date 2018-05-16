@@ -72,8 +72,8 @@
       }
     },
     created() {
+      this.weixinShareBg()
       this.user = JSON.parse(sessionStorage.getItem('user'))
-      console.log(this.user)
       this.getInviteList(this.page)
     },
     mounted() {
@@ -99,6 +99,15 @@
       }
     },
     methods: {
+      weixinShareBg() {
+        let head = document.getElementsByTagName('head')[0]
+        let div = document.createElement('div')
+        let img = document.createElement('img')
+        img.src = 'http://www.zhiliaotv.com/static/img/invite.jpg'
+        div.style = 'margin:0 auto;width:0px;height:0px;overflow:hidden;'
+        div.appendChild(img)
+        head.appendChild(div)
+      },
       onCopy() {
         this.$toast('已经复制到剪切板')
       },
@@ -115,7 +124,7 @@
             this.API.wechatJSSDK(url).then((res) => {
               let content = {
                 title: '知了TV',
-                desc: '邀请好友一起瓜分1亿个智豆~',
+                desc: '中本聪预测，智豆区块链数字资产价值将......',
                 link: registerUrl,
                 imgUrl: imgUrl,
                 width: '300',
@@ -163,11 +172,11 @@
           let vm = this
           const url = 'http://www.zhiliaotv.com/invite'
           const registerUrl = 'http://www.zhiliaotv.com/register/?invite_code=' + vm.user.invite_code // 注册的url
-          const imgUrl = 'http://www.zhiliaotv.com/static/img/bg.d53e992.png'
+          const imgUrl = 'http://www.zhiliaotv.com/static/img/invite.jpg'
           this.API.wechatJSSDK(url).then((res) => {
             let content = {
               title: '知了TV',
-              desc: '邀请好友一起瓜分1亿个智豆~',
+              desc: '中本聪预测，智豆区块链数字资产价值将......',
               link: registerUrl,
               imgUrl: imgUrl
             }

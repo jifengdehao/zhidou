@@ -21,6 +21,7 @@
       <div class="form-wp mt20 mint-input-tar">
 
         <mt-field v-model.trim="course.title" label="课程主题" placeholder="课程主题最多40个字"></mt-field>
+        <mt-cell title="课程分类" is-link :value="categoryName"></mt-cell>
 
         <mt-cell title="课程简介" is-link :to="'/classroom/course/introduction/' + id"></mt-cell>
 
@@ -53,7 +54,7 @@
         <template v-if="isInvite">
           <!--<mt-field v-model.trim="course.share_rate " label="分成比例（%）"
                     placeholder="请输入分成比例，比例必须是整数" type="number"></mt-field>-->
-          <a  class="mint-cell mint-field form-bd">
+          <a class="mint-cell mint-field form-bd">
             <div class="mint-cell-wrapper">
               <div class="mint-cell-title">
                 <span class="mint-cell-text">分成比例（%）</span>
@@ -147,6 +148,8 @@
       return {
         isInvite: false,
         id: this.$route.params.id,
+        categoryName: '', // 分类
+        actions: [], // 分类
         banner: [],
         course: {},// 课程详情
         files: [],// 上传音频文件
@@ -172,6 +175,15 @@
       }
     },
     created() {
+      // 获取课程分类
+      this.API.resourceGuide().then((res) => {
+        if (res.length > 0) {
+          console.log(res)
+          this.actions = res
+        }
+      }).catch((err) => {
+        console.log(err)
+      });
       // 获取课程详情
       this.API.anchorSingle(this.id).then((res) => {
         if (res) {
@@ -187,6 +199,13 @@
           }
           if (res.file_type == 1) {
             this.getUploadAudioKey()
+          }
+          if (this.actions.length > 0) {
+            this.actions.forEach(item => {
+              if (item.id === res.category) {
+                this.categoryName = item.name
+              }
+            })
           }
         }
       });
@@ -297,13 +316,13 @@
           message = '密码输入不正确'
         } else if (params.pay_type === 1 && params.price < 1) {
           message = '收费金额不能小于1';
-        }else if (params.pay_type == 1 && params.price > 1000000) {
+        } else if (params.pay_type == 1 && params.price > 1000000) {
           message = '收费金额不能大于1000000';
         } else if (params.pay_type === 2 && params.price < 1) {
           message = '智豆数量不能少于1';
-        }  else if (params.pay_type == 2 && params.price > 1000000) {
+        } else if (params.pay_type == 2 && params.price > 1000000) {
           message = '智豆数量不能大于1000000';
-        }else if (this.isInvite && !params.share_gain_rate) {
+        } else if (this.isInvite && !params.share_gain_rate) {
           message = '分享提成比例不能为空';
         } else if (this.isInvite && params.share_gain_rate < 0) {
           message = '分享提成比例大于0或小于100'

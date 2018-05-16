@@ -151,7 +151,7 @@
     },
     computed: {
       isPay() {
-        return +this.userBean >= this.course.price ? true : false
+        return this.userBean >= this.course.price ? true : false
       }
     },
     methods: {

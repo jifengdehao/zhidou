@@ -320,6 +320,8 @@ export default {
   getDistribution: data => http.post(`/course/distribution-list?page=${data.page}`, data),
 
   // 智豆转账
-  getSendBeanCode: () => http.post('/user/verify/bean-transfer-verify-mobile')
+  getSendBeanCode: () => http.post('/user/verify/bean-transfer-verify-mobile'),
 
+  //创建或修改课程，加载的课程类目列表
+  courseGuide: () => http.post('/resource/course-guide'),
 };

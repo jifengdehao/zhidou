@@ -24,6 +24,7 @@
         </router-link>
       </ul>
     </div>
+	<router-link tag="div" class="link-home" to="/"></router-link>
   </scroll>
   <!--<div class="page-wp distribution">
     <ul class="list">

@@ -168,10 +168,10 @@
 } */
 
 .swipe-wp {
-  height: 3rem;
+  height: 4.7rem;
   .item {
     width: 7.5rem;
-    height: 3rem;
+    height: 4.7rem;
   }
 }
 
@@ -472,9 +472,9 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
   position: fixed;
   right: 0;
   bottom: 20%;
-  height: .6rem;
-  width: .6rem;
-  background: url("./assets/link-home.png") no-repeat center;
+  height: .8rem;
+  width: .8rem;
+  background: url("./assets/icon-back-home.png") no-repeat center;
   background-size: contain;
   z-index: 9999;
 }
@@ -489,7 +489,7 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
   background-color: $color-blue;
   color: $color-white;
   padding: .1rem;
-  z-index: 50;
+  z-index: 10001;
 }
 
 .share-wrapper {
@@ -498,13 +498,14 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
   bottom: 0;
   left: 0;
   top: 0;
+  z-index: 9998;
   .mask {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     top: 0;
-    z-index: 48;
+    z-index: 9999;
     background-color: rgba(0, 0, 0, .3);
   }
   .share-icon {
@@ -513,7 +514,7 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
     top: 0;
     bottom: 0;
     left: 0;
-    z-index: 49;
+    z-index: 10000;
     text-align: right;
     color: #ffffff;
     font-size: .5rem;

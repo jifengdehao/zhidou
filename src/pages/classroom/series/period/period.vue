@@ -6,11 +6,6 @@
 <template>
   <div class="scroll-wp">
     <div class="scroll-bd">
-      <!--<mt-swipe class="swipe-wp" :auto="4000" :show-indicators="false">
-        <mt-swipe-item v-for="(item, key) in course.img" :key="key">
-          <img class="item" v-lazy="item.url || $root.placeHolder.banner" width="100%"/>
-        </mt-swipe-item>
-      </mt-swipe>-->
       <div class="swipe-wp" style="height: 4.7rem;">
         <slider v-if="banner.length>0">
           <div v-for="(item, key) in banner" :key="key">

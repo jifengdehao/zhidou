@@ -112,10 +112,10 @@
     <router-link tag="div" class="link-home" to="/"></router-link>
     <!--课程状态 报名-支付-进入-->
     <div class="scroll-ft">
-      <mt-button v-if="user.is_enrolled === 0 && course.pay_type===1" type="danger" @click="handleOrder">
+      <mt-button v-if="user.is_enrolled === 0 && course.pay_type===1" type="danger" @click.stop="handleOrder">
         购买课程（¥{{course.price}}）
       </mt-button>
-      <mt-button v-if="user.is_enrolled === 0 && course.pay_type===2" type="danger" @click="handleOrder">
+      <mt-button v-if="user.is_enrolled === 0 && course.pay_type===2" type="danger" @click.stop="handleOrder">
         购买课程（{{course.price}}个豆）
       </mt-button>
       <template v-if="user.is_enrolled === 0 &&  course.pay_type===3">
@@ -133,7 +133,7 @@
       <div class="order-wp">
         <div class="order-hd fs15 tac">
           <h3>支付详情</h3>
-          <span class="btn-close-x" @click="orderVisible = false"></span>
+          <span class="btn-close-x" @click.stop="orderVisible = false"></span>
         </div>
         <div class="order-bd">
           <div class="price">
@@ -144,20 +144,20 @@
         </div>
         <div class="order-ft">
           <mt-button class="btn-payment" type="danger" v-if="isPay"
-                     @click="payOrder">支付
+                     @click.stop="payOrder">支付
           </mt-button>
           <span class="btn-disabled fs15 tac" v-else>余额不足</span>
         </div>
       </div>
     </div>
-    <!-- <div class="share" @click="share">分享课程</div>
-     <div class="share-wrapper" v-show="isShare">
-       <div class="mask"></div>
-       <div class="share-icon" @click="isShare=false">
-         <img src="../../../assets/icon-share.png" width="104" height="98"/>
-         <p>点击右上角分享</p>
-       </div>
-     </div>-->
+    <!-- <div class="share" @click="share">分享课程</div>-->
+    <div class="share-wrapper" v-show="isShare">
+      <div class="mask"></div>
+      <div class="share-icon" @click="isShare=false">
+        <img src="../../../assets/icon-share.png" width="104" height="98"/>
+        <p>点击右上角分享</p>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -191,18 +191,26 @@
         userBean: {}, // 用户智豆
         loading: false,
         isShare: false,
-        userInfo: {} // 个人信息
+        shareCode: ''// 分享码
       }
     },
     created() {
       this.getClassDetails(this.id)
       if (this.$route.query.invite_code) {
         this.shareCode = this.$route.query.invite_code
+        sessionStorage.setItem('share-code', this.shareCode)
+        sessionStorage.setItem('share-id', this.id)
+      } else {
+        if (sessionStorage.getItem('share-id') == this.id) {
+          this.shareCode = sessionStorage.getItem('share-code')
+        } else {
+          this.shareCode = ''
+        }
       }
     },
     computed: {
       isPay() {
-        return this.userBean >= this.course.price ? true : false
+        return Number(this.userBean) >= this.course.price ? true : false
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -228,7 +236,7 @@
       // 验证是否登录
       isLoign() {
         let isLogin
-        if (/www\.zhiliaotv\.com/.test(location.host)) {
+        if (/www\.zhiliaotv\.com/.test(location.host) || /test\.zhiliaotv\.com/.test(location.host)) {
           isLogin = Cookie.get('__zlt_js__')
         } else {
           isLogin = Cookie.get('__zdb_dev_js__')
@@ -239,45 +247,49 @@
           return false
         }
       },
-      getUserInfo() {
+      // 获取个人信息
+      getUserInfo(cb) {
         this.API.userBaseInfo().then((res) => {
           if (res) {
             console.log(res)
-            this.userInfo = res;
+            cb && cb(res)
           }
         })
       },
+      // 初始分享
       initShare() {
         if (this.isWeixin()) {
           if (this.isLoign() && this.course.is_share == 1) {
-            debugger
-            this.getUserInfo()
-            const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
             let vm = this
-            this.API.wechatJSSDK(url).then((res) => {
-              let data = {
-                appId: res.appId,
-                timestamp: res.timestamp,
-                nonceStr: res.nonceStr,
-                signature: res.signature
-              }
-              let content = {
-                title: '知了TV',
-                desc: this.course.title,
-                link: url + '?invite_code=' + this.user.invite_code,
-                imgUrl: this.course.img[0] || this.$root.placeHolder.cover
-              }
-              weixinShare(data, content, function (res) {
-                console.log(res)
-                vm.$toast('分享成功~')
+            this.getUserInfo(function (res) {
+              let invite_code = res.invite_code
+              const url = 'http://www.zhiliaotv.com/course/detail/' + vm.id
+              vm.API.wechatJSSDK(url).then((res) => {
+                let data = {
+                  appId: res.appId,
+                  timestamp: res.timestamp,
+                  nonceStr: res.nonceStr,
+                  signature: res.signature
+                }
+                let content = {
+                  title: '知了TV',
+                  desc: vm.course.title,
+                  link: url + '?invite_code=' + invite_code,
+                  imgUrl: vm.course.img[0] || vm.$root.placeHolder.cover
+                }
+                weixinShare(data, content, function (res) {
+                  console.log(res)
+                  vm.$toast('分享成功~')
+                })
+              }).catch((err) => {
+                console.log(err)
               })
-            }).catch((err) => {
-              console.log(err)
             })
+
           } else {
-            const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
             let vm = this
-            this.API.wechatJSSDK(url).then((res) => {
+            const url = 'http://www.zhiliaotv.com/course/detail/' + vm.id
+            vm.API.wechatJSSDK(url).then((res) => {
               let data = {
                 appId: res.appId,
                 timestamp: res.timestamp,
@@ -286,9 +298,9 @@
               }
               let content = {
                 title: '知了TV',
-                desc: this.course.title,
+                desc: vm.course.title,
                 link: url,
-                imgUrl: this.course.img[0] || this.$root.placeHolder.cover
+                imgUrl: vm.course.img[0] || vm.$root.placeHolder.cover
               }
               weixinShare(data, content, function (res) {
                 console.log(res)
@@ -310,35 +322,37 @@
       },
       share() {
         if (this.isWeixin()) {
+          this.isShare = !this.isShare
           if (this.isLoign() && this.course.is_share == 1) {
-            this.getUserInfo()
-            const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
             let vm = this
-            this.API.wechatJSSDK(url).then((res) => {
-              let data = {
-                appId: res.appId,
-                timestamp: res.timestamp,
-                nonceStr: res.nonceStr,
-                signature: res.signature
-              }
-              let content = {
-                title: '知了TV',
-                desc: this.course.title,
-                link: url + '?invite_code=' + this.user.invite_code,
-                imgUrl: this.course.img[0] || this.$root.placeHolder.cover
-              }
-              weixinShare(data, content, function (res) {
-                console.log(res)
-                vm.$toast('分享成功~')
+            this.getUserInfo(function (res) {
+              let invite_code = res.invite_code
+              const url = 'http://www.zhiliaotv.com/course/detail/' + vm.id
+              vm.API.wechatJSSDK(url).then((res) => {
+                let data = {
+                  appId: res.appId,
+                  timestamp: res.timestamp,
+                  nonceStr: res.nonceStr,
+                  signature: res.signature
+                }
+                let content = {
+                  title: '知了TV',
+                  desc: vm.course.title,
+                  link: url + '?invite_code=' + invite_code,
+                  imgUrl: vm.course.img[0] || vm.$root.placeHolder.cover
+                }
+                weixinShare(data, content, function (res) {
+                  console.log(res)
+                  vm.$toast('分享成功~')
+                })
+              }).catch((err) => {
+                console.log(err)
               })
-            }).catch((err) => {
-              console.log(err)
             })
           } else {
-            this.isShare = !this.isShare
-            const url = 'http://www.zhiliaotv.com/course/detail/' + this.id
             let vm = this
-            this.API.wechatJSSDK(url).then((res) => {
+            const url = 'http://www.zhiliaotv.com/course/detail/' + vm.id
+            vm.API.wechatJSSDK(url).then((res) => {
               let data = {
                 appId: res.appId,
                 timestamp: res.timestamp,
@@ -347,9 +361,9 @@
               }
               let content = {
                 title: '知了TV',
-                desc: this.course.title,
+                desc: vm.course.title,
                 link: url,
-                imgUrl: this.course.img[0] || this.$root.placeHolder.cover
+                imgUrl: vm.course.img[0] || vm.$root.placeHolder.cover
               }
               weixinShare(data, content, function (res) {
                 console.log(res)
@@ -402,45 +416,63 @@
       },
       handleOrder() {
         if (this.user.is_enrolled === 1) {
-          // 点击进入
-          if (this.type === 0) {
-            return this.$router.push('/course/teach/' + this.course.period_id)
-          }
-          if (this.type === 1) {
-            if (this.periodList.length > 0) {
-              return this.$router.push('/course/teach/' + this.periodList[0].id)
-            } else {
-              this.$toast('当前课程还没开课，请等待~')
+          if (this.isLoign()) {
+            // 点击进入
+            if (this.type === 0) {
+              return this.$router.push('/course/teach/' + this.course.period_id)
             }
+            if (this.type === 1) {
+              if (this.periodList.length > 0) {
+                return this.$router.push('/course/teach/' + this.periodList[0].id)
+              } else {
+                this.$toast('当前课程还没开课，请等待~')
+              }
+            }
+          } else {
+            setTimeout(() => {
+              this.$router.push('/oauth?goto=' + location.href)
+            }, 20)
           }
         } else if (this.user.is_enrolled === 0 && this.course.pay_type === 3) {
-          // 输入密码
-          if (this.teachPwd) {
-            this.API.freeEnroll({id: this.id, pwd: this.teachPwd}).then((res) => {
-              if (res) {
-                setTimeout(() => {
-                  if (this.type === 0) {
-                    return this.$router.push('/course/teach/' + this.course.period_id)
-                  }
-                  if (this.type === 1) {
-                    if (this.periodList.length > 0) {
-                      return this.$router.push('/course/teach/' + this.periodList[0].id)
-                    } else {
-                      this.$toast('当前课程还没开课，请等待~')
+          if (this.isLoign()) {
+            // 输入密码
+            if (this.teachPwd) {
+              this.API.freeEnroll({id: this.id, pwd: this.teachPwd}).then((res) => {
+                if (res) {
+                  setTimeout(() => {
+                    if (this.type === 0) {
+                      return this.$router.push('/course/teach/' + this.course.period_id)
                     }
-                  }
-                }, 1000)
-              }
-            }).catch((err) => {
-              console.log(err)
-            })
+                    if (this.type === 1) {
+                      if (this.periodList.length > 0) {
+                        return this.$router.push('/course/teach/' + this.periodList[0].id)
+                      } else {
+                        this.$toast('当前课程还没开课，请等待~')
+                      }
+                    }
+                  }, 1000)
+                }
+              }).catch((err) => {
+                console.log(err)
+              })
+            } else {
+              this.$toast('请输入密码')
+            }
           } else {
-            this.$toast('请输入密码')
+            setTimeout(() => {
+              this.$router.push('/oauth?goto=' + location.href)
+            }, 20)
           }
         } else if (this.user.is_enrolled === 0 && this.course.pay_type === 2) {
           // 智豆支付
           this.orderVisible = true
-          this.getUserBaseBalance()
+          if (this.isLoign()) {
+            this.getUserBaseBalance()
+          } else {
+            setTimeout(() => {
+              this.$router.push('/oauth?goto=' + location.href)
+            }, 20)
+          }
         } else if (this.user.is_enrolled === 0 && this.course.pay_type === 1) {
           if (this.isLoign()) {
             // 现金支付
@@ -465,30 +497,38 @@
               console.log(err)
             })
           } else {
-            this.$router.push('/oauth?goto=' + location.href)
+            setTimeout(() => {
+              this.$router.push('/oauth?goto=' + location.href)
+            }, 20)
           }
 
         } else if (this.user.is_enrolled === 0 && this.course.pay_type === 0) {
-          //报名进入
-          this.API.freeEnroll({id: this.id}).then((res) => {
-            if (res) {
-              this.$toast('报名成功')
-              setTimeout(() => {
-                if (this.type === 0) {
-                  return this.$router.push('/course/teach/' + this.course.period_id)
-                }
-                if (this.type === 1) {
-                  if (this.periodList.length > 0) {
-                    return this.$router.push('/course/teach/' + this.periodList[0].id)
-                  } else {
-                    this.$toast('当前课程还没开课，请等待~')
+          if (this.isLoign()) {
+            //报名进入
+            this.API.freeEnroll({id: this.id}).then((res) => {
+              if (res) {
+                this.$toast('报名成功')
+                setTimeout(() => {
+                  if (this.type === 0) {
+                    return this.$router.push('/course/teach/' + this.course.period_id)
                   }
-                }
-              }, 3000)
-            }
-          }).catch((err) => {
-            console.log(err)
-          })
+                  if (this.type === 1) {
+                    if (this.periodList.length > 0) {
+                      return this.$router.push('/course/teach/' + this.periodList[0].id)
+                    } else {
+                      this.$toast('当前课程还没开课，请等待~')
+                    }
+                  }
+                }, 3000)
+              }
+            }).catch((err) => {
+              console.log(err)
+            })
+          } else {
+            setTimeout(() => {
+              this.$router.push('/oauth?goto=' + location.href)
+            }, 20)
+          }
         }
       },
       // 课程详情
@@ -497,7 +537,7 @@
           console.log(res)
           this.swiper = res.course.img
           this.course = res.course
-          // this.students = res.students
+          this.students = res.students
           this.teacher = res.teacher
           this.user = res.user
           this.intro = res.course.note
@@ -522,6 +562,7 @@
       // 获取用户智豆
       getUserBaseBalance() {
         this.API.userBalance().then((res) => {
+          console.log(res)
           this.userBean = res.bean.amount
         }).catch((err) => {
           console.log(err)
@@ -529,31 +570,25 @@
       },
       // 智豆支付
       payOrder() {
-        if (this.isLoign()) {
-          this.getUserInfo()
-
-          this.API.orderPay({course_id: this.id, pay_type: 1, invite_code: this.shareCode}).then((res) => {
-            if (res) {
-              this.$toast('支付成功')
-              setTimeout(() => {
-                if (this.type === 0) {
-                  return this.$router.push('/course/teach/' + this.course.period_id)
+        this.API.orderPay({course_id: this.id, pay_type: 1, invite_code: this.shareCode}).then((res) => {
+          if (res) {
+            this.$toast('支付成功')
+            setTimeout(() => {
+              if (this.type === 0) {
+                return this.$router.push('/course/teach/' + this.course.period_id)
+              }
+              if (this.type === 1) {
+                if (this.periodList.length > 0) {
+                  return this.$router.push('/course/teach/' + this.periodList[0].id)
+                } else {
+                  this.$toast('当前课程还没开课，请等待~')
                 }
-                if (this.type === 1) {
-                  if (this.periodList.length > 0) {
-                    return this.$router.push('/course/teach/' + this.periodList[0].id)
-                  } else {
-                    this.$toast('当前课程还没开课，请等待~')
-                  }
-                }
-              }, 3000)
-            }
-          }).catch((err) => {
-            console.log(err)
-          })
-        } else {
-          this.$router.push('/oauth?goto=' + location.href)
-        }
+              }
+            }, 3000)
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
       },
     }
   }

@@ -136,7 +136,7 @@
     created() {
       let vm = this;
       // 课程分类
-      this.API.resourceGuide().then(((res) => {
+      this.API.courseGuide().then(((res) => {
         let list = res;
         list.forEach(item => {
           item.method = vm.onSelect;
