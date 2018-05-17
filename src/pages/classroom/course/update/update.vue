@@ -39,7 +39,7 @@
         </template>
         <template v-else-if="course.pay_type == 2">
           <mt-cell title="收费类型" value="智豆收费"></mt-cell>
-          <mt-field v-model.trim="course.price " label="数量（个）"
+          <mt-field v-model.trim="course.price" label="数量（个）"
                     placeholder="请输入智豆个数" type="number"></mt-field>
         </template>
         <template v-else-if="course.pay_type == 0">
@@ -54,10 +54,10 @@
         <template v-if="isInvite">
           <!--<mt-field v-model.trim="course.share_rate " label="分成比例（%）"
                     placeholder="请输入分成比例，比例必须是整数" type="number"></mt-field>-->
-          <a class="mint-cell mint-field form-bd">
+          <a class="mint-cell mint-field">
             <div class="mint-cell-wrapper">
               <div class="mint-cell-title">
-                <span class="mint-cell-text">分成比例（%）</span>
+                <span class="mint-cell-text">分成比例&nbsp;(%)</span>
               </div>
               <div class="mint-cell-value">
                 <input placeholder="请输入分成比例，比例必须是整数" number="true"
@@ -71,8 +71,8 @@
           </a>
         </template>
         <template v-if="isInvite">
-          <mt-cell title="分成（¥）" :value="sharePrice" v-if="course.pay_type === 1"></mt-cell>
-          <mt-cell title="分成（个豆）" :value="sharePrice" v-if="course.pay_type === 2"></mt-cell>
+          <mt-cell title="分成 (¥)" :value="sharePrice" v-if="course.pay_type === 1"></mt-cell>
+          <mt-cell title="分成 (个豆)" :value="sharePrice" v-if="course.pay_type === 2"></mt-cell>
         </template>
 
         <div class="form-wp" v-if="course.file_type==2">
@@ -175,42 +175,23 @@
       }
     },
     created() {
-      // 获取课程分类
-      this.API.resourceGuide().then((res) => {
-        if (res.length > 0) {
-          console.log(res)
-          this.actions = res
-        }
-      }).catch((err) => {
-        console.log(err)
-      });
-      // 获取课程详情
-      this.API.anchorSingle(this.id).then((res) => {
-        if (res) {
-          console.log(res)
-          this.course = res;
-          if (res.is_share == 1) {
-            this.isInvite = true
-          } else {
-            this.isInvite = false
-          }
-          if (res.img.length > 0) {
-            this.banner = res.img
-          }
-          if (res.file_type == 1) {
-            this.getUploadAudioKey()
-          }
-          if (this.actions.length > 0) {
-            this.actions.forEach(item => {
-              if (item.id === res.category) {
-                this.categoryName = item.name
-              }
-            })
-          }
-        }
-      });
+      this.getCourseGuide()
+      setTimeout(() => {
+        this.getSingleDetail(this.id)
+      }, 20)
     },
     methods: {
+      // 获取课程分类
+      getCourseGuide() {
+        this.API.courseGuide().then((res) => {
+          if (res.length > 0) {
+            console.log(res)
+            this.actions = res
+          }
+        }).catch((err) => {
+          console.log(err)
+        });
+      },
       // 获取上传音频的参数
       getUploadAudioKey() {
         this.API.getAudioKey().then((res) => {
@@ -218,6 +199,33 @@
         }).catch((err) => {
           console.log(err)
         })
+      },
+      // 获取课程详情
+      getSingleDetail(id) {
+        this.API.anchorSingle(id).then((res) => {
+          if (res) {
+            console.log(res)
+            this.course = res;
+            if (res.is_share == 1) {
+              this.isInvite = true
+            } else {
+              this.isInvite = false
+            }
+            if (res.img.length > 0) {
+              this.banner = res.img
+            }
+            if (res.file_type == 1) {
+              this.getUploadAudioKey()
+            }
+            if (this.actions.length > 0) {
+              this.actions.forEach(item => {
+                if (item.id === res.category) {
+                  this.categoryName = item.name
+                }
+              })
+            }
+          }
+        });
       },
       // 获取上传视频文件
       uploadVideo(e) {
@@ -328,6 +336,8 @@
           message = '分享提成比例大于0或小于100'
         } else if (this.isInvite && params.share_gain_rate > 100) {
           message = '分享提成比例大于0小于100'
+        } else if (this.isInvite && this.sharePrice <= 0) {
+          message = '分成不能为0'
         }
         if (message) {
           this.$toast(message);

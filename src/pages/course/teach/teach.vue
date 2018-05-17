@@ -90,7 +90,7 @@
           <p>{{course.times | formatDate }}</p>
         </div>
         <div class="info gray fs12 mt10">
-         <!-- <p>报名人数&nbsp;&nbsp;{{studentCount}}人</p>-->
+          <!-- <p>报名人数&nbsp;&nbsp;{{studentCount}}人</p>-->
           <p>{{course.view_count}}次学习</p>
         </div>
         <mt-cell class="cell-card mt20" :title="teacher.space_name" @click.native="goToTeacher(teacher.id)">
@@ -470,7 +470,7 @@
       },
       formatSolution(s) {
         if (s) {
-          return s.replace(/\n/g, '<br/>')
+          return s.replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')
         } else {
           return ''
         }
@@ -681,7 +681,7 @@
           this.user = res.user
           this.intro = res.course.note
           this.teacher = res.teacher
-        //  this.studentCount = res.students.total
+          //  this.studentCount = res.students.total
           if (res.course.type == 1) {
             this.getPeriodList(res.course.course_id, this.page)
           }
@@ -796,8 +796,12 @@
       otherPrice() {
         if (this.commentType === 2) {
           this.$messagebox.prompt('其他个数', '').then(({value, action}) => {
+            if (isNaN(Number(value))) {
+              this.$toast('请输入数字')
+              return
+            }
             let params = {
-              content: value,
+              content: parseInt(value), // 智豆只能是正数
               type: this.commentType,
               period_id: this.id
             }
@@ -814,25 +818,43 @@
             })
           });
         } else if (this.commentType === 3) {
-          this.$messagebox.prompt('其他金额', '').then(({value, action}) => {
-            let params = {
-              content: value,
-              type: this.commentType,
-              period_id: this.id
-            }
-            this.API.commentPeriod(params).then((res) => {
-              if (res) {
-                let data = res.jsApiParams
-                weixinPay(data, function (res) {
-                  if (res) {
-                    window.location.reload()
-                  }
-                })
+          if (this.isWeiXin()) {
+            let vm = this
+            this.$messagebox.prompt('其他金额', '').then(({value, action}) => {
+              if (isNaN(Number(value))) {
+                this.$toast('请输入数字')
+                return
               }
-            }).catch((err) => {
-              console.log(err)
-            })
-          });
+              let params = {
+                content: Math.floor(value * 10) / 10, // 打赏金额保留一位小数
+                type: this.commentType,
+                period_id: this.id
+              }
+              this.API.commentPeriod(params).then((res) => {
+                if (res) {
+                  let data = res.jsApiParams
+                  weixinPay(data, function (res) {
+                    if (res) {
+                      // window.location.reload()
+                      vm.$router.go(0)
+                    }
+                  })
+                }
+              }).catch((err) => {
+                console.log(err)
+              })
+            });
+          } else {
+            this.$toast('请在微信客户端使用微信支付')
+          }
+        }
+      },
+      isWeiXin() {
+        let ua = window.navigator.userAgent.toLowerCase()
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+          return true;
+        } else {
+          return false;
         }
       },
       // 打赏
@@ -847,13 +869,21 @@
           }
           this.API.commentPeriod(params).then((res) => {
             if (res) {
+              // 微信支付
               if (this.commentType === 3) {
-                let data = res.jsApiParams
-                weixinPay(data, function (res) {
-                  if (res) {
-                    window.location.reload()
-                  }
-                })
+                if (this.isWeiXin()) {
+                  let data = res.jsApiParams
+                  let vm = this
+                  weixinPay(data, function (res) {
+                    if (res) {
+                      // window.location.reload()
+                      vm.$router.go(0)
+                    }
+                  })
+                } else {
+                  this.$toast('请在微信客户端使用微信支付')
+                }
+                // 智豆支付
               } else {
                 this.comment.push(res)
                 this.shangModal = false

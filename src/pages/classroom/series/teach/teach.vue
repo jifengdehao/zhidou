@@ -231,9 +231,10 @@
            v-infinite-scroll="loadMore"
            infinite-scroll-disabled="loading"
            infinite-scroll-distance="10">
-        <mt-cell :title="item.name" :item="item" v-for="(item,index) in students" :key="index">
+        <mt-cell :title="item.name" :item="item" v-for="(item,index) in students" :key="index" v-if="students.length>0">
           <img class="avatar" slot="icon" :src="item.avatar || $root.placeHolder.avatar">
         </mt-cell>
+        <div class="tac" style="padding: .5rem;">暂无用户列表</div>
       </div>
     </div>
 

@@ -47,7 +47,10 @@ axios.interceptors.response.use(
   }
 )
 
-
+/*router.beforeEach((to, from, next) => {
+  console.log(from)
+  next()
+})*/
 const handleError = (res) => {
   let message;
   const status = res.status;
@@ -56,7 +59,7 @@ const handleError = (res) => {
     message = '传输数据错误';
   } else if (status === 401) {
     message = '请先登录';
-    return router.push('/oauth');
+    return router.push('/oauth?goto=' + location.href)
   } else if (status === 404) {
     message = '请求接口不存在';
   } else if (status === 500) {

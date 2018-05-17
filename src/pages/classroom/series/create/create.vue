@@ -15,7 +15,7 @@
             :success="upload.success">
             <img class="upload-icon" src="../../../../assets/icon-img.png" alt="">
             <p>上传系列课海报</p>
-           <!-- <p class="gray">尺寸：750x300像素</p>-->
+            <!-- <p class="gray">尺寸：750x300像素</p>-->
             <p class="gray" style="margin-top: 0;">(上传图片要求 长:宽=750:470)</p>
           </upload-image>
         </div>
@@ -66,7 +66,7 @@
     <div class="scroll-ft">
       <mt-button type="primary" @click="handleSubmit">确定</mt-button>
     </div>
-    <mt-actionsheet :actions="actions" v-if="actions.length>0" v-model="sheetVisible"></mt-actionsheet>
+    <mt-actionsheet :actions="actions" v-if="actions.length>0" v-model="sheetVisible" id="classify_list"></mt-actionsheet>
 
     <mt-actionsheet :actions="payType" v-if="payType.length>0" v-model="payVisible"></mt-actionsheet>
     <router-link tag="div" class="link-home" to="/" style="bottom:10%;"></router-link>
@@ -194,6 +194,8 @@
             message = '分享提成比例大于0或小于100'
           } else if (this.isInvite && params.share_gain_rate > 100) {
             message = '分享提成比例大于0小于100'
+          } else if (this.isInvite && this.sharePrice <= 0) {
+            message = '分成不能为0'
           }
 
           if (message) {

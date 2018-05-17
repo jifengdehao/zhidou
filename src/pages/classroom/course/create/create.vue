@@ -79,7 +79,7 @@
     <div class="scroll-ft">
       <mt-button type="primary" @click.native="handleNext">下一步</mt-button>
     </div>
-    <mt-actionsheet :actions="actions" v-if="actions.length" v-model="sheetVisible"></mt-actionsheet>
+    <mt-actionsheet :actions="actions" v-if="actions.length" v-model="sheetVisible" id="classify_list"></mt-actionsheet>
     <router-link tag="div" class="link-home" to="/"></router-link>
   </div>
   <div class="scroll-wp" v-else>
@@ -114,8 +114,11 @@
                 <option value="1">现金收费</option>
                 <option value="2">智豆收费</option>
               </select></div>
-            <input v-model.trim="params.price" type="number" placeholder="最小金额1元" v-if="params.pay_type ==  1">
-            <input v-model.trim="params.price" type="number" placeholder="最少1个智豆" v-if="params.pay_type ==  2">
+            <input v-model.trim="params.price" type="number" placeholder="最小金额1元" v-if="params.pay_type ==  1"/>
+            <input v-model.trim="params.price" type="number" placeholder="最少1个智豆" v-if="params.pay_type ==  2"
+                   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"
+            />
           </li>
           <li v-if="tab == 4" class="mt20">
             <div style="justify-content: space-between;display: flex;margin-bottom: .2rem;align-items: center;">设置邀请奖励
@@ -345,7 +348,6 @@
           let vm = this;
           let message = '';
           let params = this.params;
-          console.log(this.isInvite)
           if (params.pay_type == 3 && !(/^[0-9a-zA-Z]+$/).test(params.pwd)) {
             message = '密码输入不正确';
           } else if (params.pay_type == 1 && params.price < 1) {
@@ -362,6 +364,8 @@
             message = '分享提成比例大于0或小于100'
           } else if (this.isInvite && params.share_gain_rate > 100) {
             message = '分享提成比例大于0小于100'
+          } else if (this.isInvite && this.sharePrice <= 0) {
+            message = '分成不能为0'
           }
           if (message) {
             this.$toast(message);
@@ -450,6 +454,7 @@
 
 <style lang="scss" scoped>
   @import "../../../../styles/mixin.scss";
+
 
   .icon-radio {
     position: relative;

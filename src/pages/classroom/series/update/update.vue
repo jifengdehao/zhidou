@@ -16,7 +16,7 @@
             :success="upload.success">
             <img class="upload-icon" src="../../../../assets/icon-img.png" width="100%"/>
             <p>上传系列课海报</p>
-           <!-- <p class="gray">尺寸：750x470像素</p>-->
+            <!-- <p class="gray">尺寸：750x470像素</p>-->
             <p class="gray" style="margin-top: 0;">(上传图片要求 长:宽=750:470)</p>
           </upload-image>
         </div>
@@ -47,7 +47,7 @@
           <a class="mint-cell mint-field form-bd">
             <div class="mint-cell-wrapper">
               <div class="mint-cell-title">
-                <span class="mint-cell-text">分成比例（%）</span>
+                <span class="mint-cell-text">分成比例&nbsp;(%)</span>
               </div>
               <div class="mint-cell-value">
                 <input placeholder="请输入分成比例，比例必须是整数" number="true"
@@ -61,8 +61,8 @@
           </a>
         </template>
         <template v-if="isInvite">
-          <mt-cell title="分成（¥）" :value="sharePrice" v-if="course.pay_type === 1"></mt-cell>
-          <mt-cell title="分成（个豆）" :value="sharePrice" v-if="course.pay_type === 2"></mt-cell>
+          <mt-cell title="分成 (¥)" :value="sharePrice" v-if="course.pay_type === 1"></mt-cell>
+          <mt-cell title="分成 (个豆)" :value="sharePrice" v-if="course.pay_type === 2"></mt-cell>
         </template>
         <mt-cell title="课程简介" is-link :to="'/classroom/series/intro/' + id"></mt-cell>
       </div>
@@ -112,7 +112,9 @@
     },
     created() {
       this.getCategory()
-      this.getSeriesDetails()
+      setTimeout(() => {
+        this.getSeriesDetails()
+      }, 20)
     },
     computed: {
       sharePrice() {
@@ -126,8 +128,10 @@
     methods: {
       // 课程分类
       getCategory() {
-        this.API.resourceGuide().then((res) => {
-          this.actions = res;
+        this.API.courseGuide().then((res) => {
+          if (res.length > 0) {
+            this.actions = res;
+          }
         }).catch((err) => {
           console.log(err)
         });
@@ -205,6 +209,8 @@
           message = '分享提成比例大于0或小于100'
         } else if (this.isInvite && params.share_gain_rate > 100) {
           message = '分享提成比例大于0小于100'
+        } else if (this.isInvite && this.sharePrice <= 0) {
+          message = '分成不能为0'
         }
         if (message) {
           this.$toast(message);

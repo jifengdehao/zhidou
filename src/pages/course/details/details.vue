@@ -284,7 +284,6 @@
                 console.log(err)
               })
             })
-
           } else {
             let vm = this
             const url = 'http://www.zhiliaotv.com/course/detail/' + vm.id
