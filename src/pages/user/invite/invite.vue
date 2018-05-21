@@ -83,7 +83,13 @@
       })
     },
     beforeRouteEnter(to, from, next) {
-      // XXX: 修复iOS版微信HTML5 History兼容性问题
+      if (to.query.from) {
+        let url = 'http://www.zhiliaotv.com/invite'
+        location.assign(url)
+      } else {
+        next()
+      }
+      /*
       console.log(isIOSWeChat())
       if (isIOSWeChat() && to.path !== location.pathname) {
         // 此处不可使用location.replace
@@ -100,6 +106,7 @@
           return false;
         }
       }
+      */
     },
     methods: {
       weixinShareBg() {

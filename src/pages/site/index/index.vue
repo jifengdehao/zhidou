@@ -165,22 +165,11 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      // XXX: 修复iOS版微信HTML5 History兼容性问题
-      console.log(isIOSWeChat())
-      if (isIOSWeChat() && to.path !== location.pathname) {
-        // 此处不可使用location.replace
-        location.assign(to.fullPath)
+      if (to.query.from) {
+        let url = 'http://www.zhiliaotv.com/index'
+        location.assign(url)
       } else {
         next()
-      }
-
-      function isIOSWeChat() {
-        let ua = window.navigator.userAgent.toLowerCase();
-        if (ua.match(/(iPhone|iPod|iPad);?/i)) {
-          return true;
-        } else {
-          return false;
-        }
       }
     },
     methods: {
