@@ -52,11 +52,35 @@
         <div class="bd tac" v-else>暂无课程简介</div>
       </div>
     </div>
+    <div class="mint-msgbox-wrapper" style="position: absolute; z-index: 2001;" v-if="ifFailMsg">
+      <div class="mint-msgbox">
+        <div class="mint-msgbox-header">
+          <div class="mint-msgbox-title red ">审核未通过</div>
+        </div>
+        <div class="mint-msgbox-content">
+          <div class="mint-msgbox-message" style="color: #333333">{{course.fail_msg}}</div>
+        </div>
+        <div class="mint-msgbox-btns" style="height: .9rem;line-height: .9rem;">
+          <button class="mint-msgbox-btn mint-msgbox-cancel gray-dark" @click="ifFailMsg = false">取消</button>
+          <button class="mint-msgbox-btn mint-msgbox-confirm" @click="$router.push('/classroom/series/period/edit/' + id)">
+            重新编辑
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="v-modal" style="z-index: 2000;" v-if="ifFailMsg"></div>
+
+
     <router-link tag="div" class="link-home" to="/"></router-link>
-    <div class="scroll-ft">
+    <div class="scroll-ft" v-if="!course.fail_msg">
       <mt-button type="default" @click="$router.push('/classroom/series/period/edit/' + id)">编辑</mt-button>
       <mt-button type="primary" @click="goToTeach">进入直播</mt-button>
     </div>
+    <div class="scroll-ft" v-else>
+      <mt-button type="default" @click="$router.back()">取消</mt-button>
+      <mt-button type="primary" @click="$router.push('/classroom/series/period/edit/' + id)">重新编辑</mt-button>
+    </div>
+
   </div>
 </template>
 
@@ -69,6 +93,7 @@
     },
     data() {
       return {
+        ifFailMsg: false,
         id: this.$route.params.id, // 系列课-课时Id
         swiper: [], // 系列课banner
         intro: [], //系列课时简介
@@ -84,8 +109,11 @@
           if (res.note.length > 0) {
             this.intro = res.note
           }
-          if(res.img.length>0){
-            this.banner= res.img
+          if (res.img.length > 0) {
+            this.banner = res.img
+          }
+          if (res.fail_msg) {
+            this.ifFailMsg = true
           }
         }
       });

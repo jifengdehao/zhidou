@@ -63,9 +63,31 @@
       </div>
       <router-link tag="div" class="link-home" to="/"></router-link>
     </div>
-    <div class="scroll-ft">
+    <div class="mint-msgbox-wrapper" style="position: absolute; z-index: 2001;" v-if="ifFailMsg">
+      <div class="mint-msgbox">
+        <div class="mint-msgbox-header">
+          <div class="mint-msgbox-title red ">审核未通过</div>
+        </div>
+        <div class="mint-msgbox-content">
+          <div class="mint-msgbox-message" style="color: #333333">{{course.fail_msg}}</div>
+        </div>
+        <div class="mint-msgbox-btns" style="height: .9rem;line-height: .9rem;">
+          <button class="mint-msgbox-btn mint-msgbox-cancel gray-dark" @click="ifFailMsg = false">取消</button>
+          <button class="mint-msgbox-btn mint-msgbox-confirm" @click="$router.push('/classroom/course/update/' + id)">
+            重新编辑
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="v-modal" style="z-index: 2000;" v-if="ifFailMsg"></div>
+
+    <div class="scroll-ft" v-if="!course.fail_msg">
       <mt-button type="default" @click="$router.push('/classroom/course/update/' + id)">编辑</mt-button>
       <mt-button type="primary" @click="goToTeach">进入直播</mt-button>
+    </div>
+    <div class="scroll-ft" v-else>
+      <mt-button type="default" @click="$router.back()">取消</mt-button>
+      <mt-button type="primary" @click="$router.push('/classroom/course/update/' + id)">重新编辑</mt-button>
     </div>
     <router-link tag="div" class="link-home" to="/"></router-link>
   </div>
@@ -80,6 +102,7 @@
     },
     data() {
       return {
+        ifFailMsg: false,
         id: this.$route.params.id,
         course: {},
         students: {},
@@ -122,6 +145,10 @@
             }
             if (res.img.length > 0) {
               this.banner = res.img
+            }
+            if (res.fail_msg) {
+              // this.$messagebox.confirm('审核未通过', res.fail_msg)
+              this.ifFailMsg = true
             }
           }
         }).catch((err) => {

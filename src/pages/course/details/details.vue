@@ -213,14 +213,25 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      // XXX: 修复iOS版微信HTML5 History兼容性问题
+      if (to.query.from) {
+        if (to.query.invite_code) {
+          let url = 'http://www.zhiliaotv.com/course/detail/' + to.params.id + '?invite_code=' + to.query.invite_code
+          location.assign(url)
+        } else {
+          let url = 'http://www.zhiliaotv.com/course/detail/' + to.params.id
+          location.assign(url)
+        }
+      } else {
+        next()
+      }
+      /*
       if (isIOSWeChat() && to.path !== location.pathname) {
+        debugger
         // 此处不可使用location.replace
         location.assign(to.fullPath)
       } else {
         next()
       }
-
       function isIOSWeChat() {
         let ua = window.navigator.userAgent.toLowerCase();
         if (ua.match(/(iPhone|iPod|iPad);?/i)) {
@@ -229,9 +240,10 @@
           return false;
         }
       }
+      */
     },
     methods: {
-      weixinShareBg(imgSrc,pText) {
+      weixinShareBg(imgSrc, pText) {
         let head = document.getElementsByTagName('head')[0]
         let div = document.createElement('div')
         let p = document.createElement('p')
@@ -273,8 +285,9 @@
             let vm = this
             this.getUserInfo(function (res) {
               let invite_code = res.invite_code
-              const url = 'http://www.zhiliaotv.com/course/detail/' + vm.id
-              vm.API.wechatJSSDK(url).then((res) => {
+              let SingUrl = location.href // 当前的url
+              let regUrl = 'http://www.zhiliaotv.com/course/detail/' + vm.id // 分享链接
+              vm.API.wechatJSSDK(SingUrl).then((res) => {
                 let data = {
                   appId: res.appId,
                   timestamp: res.timestamp,
@@ -284,7 +297,7 @@
                 let content = {
                   title: '知了TV',
                   desc: vm.course.title,
-                  link: url + '?invite_code=' + invite_code,
+                  link: regUrl + '?invite_code=' + invite_code,
                   imgUrl: vm.course.img[0] || vm.$root.placeHolder.cover
                 }
                 weixinShare(data, content, function (res) {
@@ -297,8 +310,9 @@
             })
           } else {
             let vm = this
-            const url = 'http://www.zhiliaotv.com/course/detail/' + vm.id
-            vm.API.wechatJSSDK(url).then((res) => {
+            let SingUrl = location.href // 当前的url
+            let regUrl = 'http://www.zhiliaotv.com/course/detail/' + vm.id // 分享链接
+            vm.API.wechatJSSDK(SingUrl).then((res) => {
               let data = {
                 appId: res.appId,
                 timestamp: res.timestamp,
@@ -308,7 +322,7 @@
               let content = {
                 title: '知了TV',
                 desc: vm.course.title,
-                link: url,
+                link: regUrl,
                 imgUrl: vm.course.img[0] || vm.$root.placeHolder.cover
               }
               weixinShare(data, content, function (res) {
@@ -336,8 +350,9 @@
             let vm = this
             this.getUserInfo(function (res) {
               let invite_code = res.invite_code
-              const url = 'http://www.zhiliaotv.com/course/detail/' + vm.id
-              vm.API.wechatJSSDK(url).then((res) => {
+              let SingUrl = location.href  // 当前的url
+              let regUrl = 'http://www.zhiliaotv.com/course/detail/' + vm.id // 分享链接
+              vm.API.wechatJSSDK(SingUrl).then((res) => {
                 let data = {
                   appId: res.appId,
                   timestamp: res.timestamp,
@@ -347,7 +362,7 @@
                 let content = {
                   title: '知了TV',
                   desc: vm.course.title,
-                  link: url + '?invite_code=' + invite_code,
+                  link: regUrl + '?invite_code=' + invite_code,
                   imgUrl: vm.course.img[0] || vm.$root.placeHolder.cover
                 }
                 weixinShare(data, content, function (res) {
@@ -360,8 +375,9 @@
             })
           } else {
             let vm = this
-            const url = 'http://www.zhiliaotv.com/course/detail/' + vm.id
-            vm.API.wechatJSSDK(url).then((res) => {
+            let SingUrl = location.href // 当前的url
+            let regUrl = 'http://www.zhiliaotv.com/course/detail/' + vm.id // 分享链接
+            vm.API.wechatJSSDK(SingUrl).then((res) => {
               let data = {
                 appId: res.appId,
                 timestamp: res.timestamp,
@@ -371,7 +387,7 @@
               let content = {
                 title: '知了TV',
                 desc: vm.course.title,
-                link: url,
+                link: regUrl,
                 imgUrl: vm.course.img[0] || vm.$root.placeHolder.cover
               }
               weixinShare(data, content, function (res) {
@@ -510,7 +526,6 @@
               this.$router.push('/oauth?goto=' + location.href)
             }, 20)
           }
-
         } else if (this.user.is_enrolled === 0 && this.course.pay_type === 0) {
           if (this.isLoign()) {
             //报名进入
@@ -551,7 +566,7 @@
           this.user = res.user
           this.intro = res.course.note
           //  设置分享图片
-          this.weixinShareBg(res.course.img[0],res.course.title)
+          this.weixinShareBg(res.course.img[0], res.course.title)
           this.initShare()
         }).catch((err) => {
           console.log(err)
