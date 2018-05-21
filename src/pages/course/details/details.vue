@@ -214,7 +214,6 @@
     },
     beforeRouteEnter(to, from, next) {
       // XXX: 修复iOS版微信HTML5 History兼容性问题
-      console.log(isIOSWeChat())
       if (isIOSWeChat() && to.path !== location.pathname) {
         // 此处不可使用location.replace
         location.assign(to.fullPath)
@@ -232,6 +231,18 @@
       }
     },
     methods: {
+      weixinShareBg(imgSrc,pText) {
+        let head = document.getElementsByTagName('head')[0]
+        let div = document.createElement('div')
+        let p = document.createElement('p')
+        let img = document.createElement('img')
+        img.src = imgSrc
+        p.innerText = pText
+        div.style = 'margin:0 auto;width:0px;height:0px;overflow:hidden;'
+        div.appendChild(p)
+        div.appendChild(img)
+        head.appendChild(div)
+      },
       // 验证是否登录
       isLoign() {
         let isLogin
@@ -462,10 +473,10 @@
             }, 20)
           }
         } else if (this.user.is_enrolled === 0 && this.course.pay_type === 2) {
-          // 智豆支付
-          this.orderVisible = true
           if (this.isLoign()) {
             this.getUserBaseBalance()
+            // 智豆支付
+            this.orderVisible = true
           } else {
             setTimeout(() => {
               this.$router.push('/oauth?goto=' + location.href)
@@ -539,7 +550,8 @@
           this.teacher = res.teacher
           this.user = res.user
           this.intro = res.course.note
-          this.type = res.course.type
+          //  设置分享图片
+          this.weixinShareBg(res.course.img[0],res.course.title)
           this.initShare()
         }).catch((err) => {
           console.log(err)

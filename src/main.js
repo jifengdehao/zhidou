@@ -50,7 +50,7 @@ Vue.filter('formatDate', function (value) {
   return formatDate(value);
 });
 
-// wechat();
+
 
 
 router.beforeEach((to, from, next) => {

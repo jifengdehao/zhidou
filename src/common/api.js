@@ -47,10 +47,6 @@ axios.interceptors.response.use(
   }
 )
 
-/*router.beforeEach((to, from, next) => {
-  console.log(from)
-  next()
-})*/
 const handleError = (res) => {
   let message;
   const status = res.status;

@@ -213,7 +213,7 @@
           this.API.wechatJSSDK(url).then((res) => {
             let content = {
               title: '知了TV',
-              desc: '中本聪预测，智豆区块链数字资产价值将......',
+              desc: '全球首个基于区块链开发的激励型在线教育社区',
               link: url,
               imgUrl: imgUrl,
               width: '300',

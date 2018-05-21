@@ -124,17 +124,17 @@
             <div style="justify-content: space-between;display: flex;margin-bottom: .2rem;align-items: center;">设置邀请奖励
               <mt-switch v-model="isInvite" style="padding: 0;"></mt-switch>
             </div>
-            <div style="justify-content: space-between;display: flex;align-items: center;margin-bottom: .2rem">
+            <div style="justify-content: space-between;display: flex;align-items: center;margin-bottom: .2rem" v-show="isInvite">
               分成比例（%）<input v-model.trim="params.share_gain_rate" type="number"
                             placeholder="请输入分成比例，比例必须是整数"
                             onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
                             onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}"
                             style="flex: 1;">
             </div>
-            <div style="justify-content: space-between;display: flex;align-items: center;" v-if="params.pay_type == 1">
+            <div style="justify-content: space-between;display: flex;align-items: center;" v-if="params.pay_type == 1" v-show="isInvite">
               分成（¥）&nbsp;{{sharePrice}}
             </div>
-            <div style="justify-content: space-between;display: flex;align-items: center;" v-if="params.pay_type == 2">
+            <div style="justify-content: space-between;display: flex;align-items: center;" v-if="params.pay_type == 2" v-show="isInvite">
               分成（个豆）&nbsp;{{sharePrice}}
             </div>
           </li>

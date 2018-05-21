@@ -21,7 +21,7 @@
       <div class="form-wp mt20 mint-input-tar">
 
         <mt-field v-model.trim="course.title" label="课程主题" placeholder="课程主题最多40个字"></mt-field>
-        <mt-cell title="课程分类" is-link :value="categoryName"></mt-cell>
+        <mt-cell title="课程分类" :value="categoryName"></mt-cell>
 
         <mt-cell title="课程简介" is-link :to="'/classroom/course/introduction/' + id"></mt-cell>
 

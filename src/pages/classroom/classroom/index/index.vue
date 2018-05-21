@@ -24,7 +24,7 @@
         <slider v-if="swiper.length>0">
           <div v-for="item in swiper">
             <a href="javascript:;">
-              <img :src="item.url || $root.placeHolder.banner" style="height: 4.7rem;"/>
+              <img v-lazy="item.url || $root.placeHolder.banner" style="height: 4.7rem;"/>
             </a>
           </div>
         </slider>
@@ -72,7 +72,7 @@
             <!-- <span class="btn-category blue fs15 ml10" @click.stop.prevent="$router.push('/classroom/series/category')">分类管理</span> -->
           </div>
         </mt-cell>
-        <mt-cell is-link v-else>
+        <mt-cell  v-else>
           <div slot="title" class="fs18">
             系列课({{ series.count }})
           </div>
@@ -88,7 +88,7 @@
         <mt-cell is-link to="/classroom/classlist/0" v-if="single.count > 4">
           <span slot="title" class="fs18">单次课({{ single.count }})</span>
         </mt-cell>
-        <mt-cell is-link v-else>
+        <mt-cell  v-else>
           <span slot="title" class="fs18">单次课({{ single.count }})</span>
         </mt-cell>
         <div v-if="single.count>0">

@@ -51,11 +51,6 @@
       };
     },
     created() {
-      /*this.API.userBaseInfo().then((res) => {
-        this.userInfo = res;
-      }).catch((err) => {
-        console.log(err)
-      });*/
       this.userInfo = JSON.parse(sessionStorage.getItem('user'))
     },
     methods: {
@@ -77,7 +72,6 @@
       },
       handleLogout() {
         const vm = this;
-
         this.API.logout().then((res) => {
           if (res) {
             this.$toast('退出成功');
@@ -135,7 +129,6 @@
     border-radius: .4rem;
     background: linear-gradient(left, $color-red-begin, $color-red-end) no-repeat;
   }
-
   .pop-upload {
     &:before {
       content: "";
@@ -144,14 +137,14 @@
       left: 0;
       width: 100%;
       bottom: 0;
-      z-index: 998;
+      z-index: 8;
       background: rgba(0, 0, 0, .5);
     }
     .upload-wp {
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
-      z-index: 999;
+      z-index: 9;
       width: 7rem;
       background: $color-white;
       border-radius: .06rem;

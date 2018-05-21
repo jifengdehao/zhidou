@@ -22,9 +22,9 @@
         </div>
       </div>
       <div class="form-wp mt20 mint-input-tar">
-        <mt-field class="form-bd" v-model.trim="course.name" label="系列课名称"
+        <mt-field class="form-bd" v-model.trim="course.title" label="系列课名称"
                   placeholder="系列课名称最多40个字"></mt-field>
-        <mt-cell title="系列课分类" is-link :value="params.categoryName"></mt-cell>
+        <mt-cell title="系列课分类" :value="params.categoryName"></mt-cell>
 
         <mt-cell title="收费类型" :value="params.payName"></mt-cell>
         <mt-field class="form-bd" v-model.trim="course.price" type="number" label="价格（元）"
@@ -177,7 +177,7 @@
         let banner = this.banner;
         let params = {
           id: this.course.id, // 课程id
-          name: this.course.name, // 课程名程
+          name: this.course.title, // 课程名程
           pay_type: this.course.pay_type,  // 支付类型
           price: this.course.price, // 课程价格
           plan_period_count: this.course.plan_period_count, // 排课计划

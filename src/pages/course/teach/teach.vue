@@ -243,7 +243,7 @@
                      @click.native="getToClassDetails(item)"/>
       </div>
       <div class="detail-intro" v-show="tab == 'intro'">
-        <div v-if="intro">
+        <div v-if="intro.length>0">
           <div class="hd">主讲人: {{ course.author }}</div>
           <div class="bd">
             <template v-for="item in intro">
@@ -255,8 +255,9 @@
         <div class="tac" v-else style="padding: .5rem;">暂无课程简介</div>
         <div class="explain" v-if="course.pay_type===1 || course.pay_type===2">
           <h3>购买须知</h3>
-          <p class="mt10">1、该课程为付费系列课程，按课程计划定期更新，每节课程可在开课时直播学习，也可以反复会听</p>
-          <p>2、该课程为虚拟内容服务，购买成功后概不退款，敬请原谅</p>
+          <p class="mt10">1. 该课程为付费系列课程（付费单课课程），按课程计划定期更新，每节课程可在开课时学习，也可反复回听 ；</p>
+          <p>2. 购买课程后关注我们的服务号，可在菜单里进入听课；</p>
+          <p>3. 该课程为虚拟内容服务，购买成功后概不退款，敬请原谅 。</p>
         </div>
       </div>
       <router-link tag="div" class="link-home" to="/"></router-link>
@@ -679,7 +680,9 @@
           this.swiper = res.course.img
           this.course = res.course
           this.user = res.user
-          this.intro = res.course.note
+          if (res.course.note.length > 0) {
+            this.intro = res.course.note
+          }
           this.teacher = res.teacher
           //  this.studentCount = res.students.total
           if (res.course.type == 1) {

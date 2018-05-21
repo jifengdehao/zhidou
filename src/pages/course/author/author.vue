@@ -4,7 +4,7 @@
 * @Description: 用户-主播空间
 */
 <template>
-  <scroll class="scroll-bd" :data="swiper" style="overflow:hidden;" ref="scroll">
+  <scroll class="scroll-bd" :data="single.list" style="overflow:hidden;" ref="scroll">
     <div>
       <div class="author-wp" v-if="space">
         <div class="author-hd">
@@ -24,7 +24,7 @@
         <slider v-if="swiper.length>0">
           <div v-for="(item,index) in swiper" :key="index">
             <a href="javascript:;">
-              <img :src="item.url || $root.placeHolder.banner" style="height: 4.7rem;"/>
+              <img v-lazy="item.url || $root.placeHolder.banner" style="height: 4.7rem;"/>
             </a>
           </div>
         </slider>
@@ -64,7 +64,7 @@
         <mt-cell is-link :to="'/course/classList/0/'+id" v-if="single.count>4">
           <span slot="title" class="fs18">单次课({{ single.count }})</span>
         </mt-cell>
-        <mt-cell is-link v-else>
+        <mt-cell v-else>
           <span slot="title" class="fs18">单次课({{ single.count }})</span>
         </mt-cell>
         <div v-if="single.count>0">
@@ -97,7 +97,7 @@
         swiper: [], //主播空间图片
         fans: 0, // 主播粉丝
         series: {}, // 系列课列表
-        single: [],  // 单课程列表
+        single: {},  // 单课程列表
         select: false
       }
     },
