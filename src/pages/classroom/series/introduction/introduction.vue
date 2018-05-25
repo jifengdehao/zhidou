@@ -90,9 +90,7 @@
       handleSubmit() {
         let vm = this;
         let fileIds = [];
-        if(this.title){
-          fileIds.unshift({fileId: '', dec: this.title.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g,'')})
-        }
+        fileIds.unshift({fileId: '', dec: this.title.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g,'')});
         this.intro.forEach((item) => {
           fileIds.push({fileId: item.fileId, dec: item.dec});
         });

@@ -86,12 +86,7 @@
       if (to.query.from) {
         let url = 'http://www.zhiliaotv.com/invite'
         location.assign(url)
-      } else {
-        next()
-      }
-      /*
-      console.log(isIOSWeChat())
-      if (isIOSWeChat() && to.path !== location.pathname) {
+      } else if (isIOSWeChat() && to.path !== location.pathname) {
         // 此处不可使用location.replace
         location.assign(to.fullPath)
       } else {
@@ -106,7 +101,6 @@
           return false;
         }
       }
-      */
     },
     methods: {
       weixinShareBg() {

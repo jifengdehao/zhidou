@@ -168,9 +168,20 @@
       if (to.query.from) {
         let url = 'http://www.zhiliaotv.com/index'
         location.assign(url)
+        } else if(isIOSWeChat() && to.path !== location.pathname) {
+        // 此处不可使用location.replace
+        location.assign(to.fullPath)
       } else {
         next()
       }
+      function isIOSWeChat() {
+          let ua = window.navigator.userAgent.toLowerCase();
+          if (ua.match(/(iPhone|iPod|iPad);?/i)) {
+            return true;
+          } else {
+            return false;
+          }
+        }
     },
     methods: {
       weixinShareBg() {

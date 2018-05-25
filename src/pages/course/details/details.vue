@@ -54,7 +54,7 @@
         <li :class="{active: tab == 'intro'}" @click.stop="selectTab('intro')">
           <a href="javascript:;">课程简介</a>
         </li>
-        <li :class="{active: tab == 'list'}" @click.stop="selectTab('list')" v-if="type===1">
+        <li :class="{active: tab == 'list'}" @click.stop="selectTab('list')" v-if="course.type===1">
           <a href="javascript:;">课程目录</a>
         </li>
         <!--<li :class="{active: tab == 'comment'}" @click="tab = 'comment'">
@@ -221,9 +221,20 @@
           let url = 'http://www.zhiliaotv.com/course/detail/' + to.params.id
           location.assign(url)
         }
-      } else {
-        next()
-      }
+      }  else if (isIOSWeChat() && to.path !== location.pathname) {
+                 // 此处不可使用location.replace
+             location.assign(to.fullPath)
+        } else {
+          next()
+        }
+        function isIOSWeChat() {
+          let ua = window.navigator.userAgent.toLowerCase();
+          if (ua.match(/(iPhone|iPod|iPad);?/i)) {
+            return true;
+          } else {
+            return false;
+          }
+        }
     },
     methods: {
       weixinShareBg(imgSrc, pText) {

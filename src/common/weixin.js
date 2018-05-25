@@ -115,7 +115,7 @@ export const weixinShare = function (data, content, cb, errorCb) {
     })
     // 分享朋友圈
     wx.onMenuShareTimeline({
-      title: content.title, // 分享标题
+      title: "知了TV —— " + content.desc, // 分享标题
       link: content.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
       imgUrl: content.imgUrl, // 分享图标
       success: function (res) {
