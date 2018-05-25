@@ -18,14 +18,16 @@
       <img src="./earn-03.png" width="100%"/>
     </router-link>
     <h3 class="tac title">方式四</h3>
-    <img src="./earn-06.png" width="100%"/>
+    <img src="./earn-08.png" width="100%"/>
     <h3 class="tac title">方式五</h3>
     <img src="./earn-07.png" width="100%"/>
-	<router-link tag="div" class="link-home" to="/"></router-link>
+    <router-link tag="div" class="link-home" to="/"></router-link>
   </div>
 </template>
 
 <script>
+
+
   export default {
     name: "earn-bean"
   }

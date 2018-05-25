@@ -43,7 +43,7 @@
         // 读取本地图片转成base64显示到页面待使用
         Indicator.open()
         let size = e.target.files[0].size
-        if ((/gif/i).test(e.target.files[0].type)) {
+        if ((/gif/ig).test(e.target.files[0].type)) {
           let fr = new FileReader()
           fr.readAsDataURL(e.target.files[0])
           fr.onload = e => {
@@ -64,17 +64,17 @@
               // 图片 小于500kb 不压缩
               if (size < minSize) {
                 self.uploadToSever(e.target.result)
-                // 1M
+              // 1M
               } else if (size < maxSize) {
                 self.canvasDataURL(e.target.result, {quality: 0.7}, function (base64Codes) {
                   self.uploadToSever(base64Codes)
                 })
-                // 2M
+              // 2M
               } else if (size < TwoMaxSize) {
                 self.canvasDataURL(e.target.result, {quality: 0.5}, function (base64Codes) {
                   self.uploadToSever(base64Codes)
                 })
-                // 大于2M
+              // 大于2M
               } else {
                 self.canvasDataURL(e.target.result, {quality: 0.4}, function (base64Codes) {
                   self.uploadToSever(base64Codes)
